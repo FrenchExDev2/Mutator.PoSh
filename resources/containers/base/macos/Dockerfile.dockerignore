@@ -1,0 +1,15 @@
+**/.git
+**/.cache
+**/test/Artifacts
+**/bin
+**/obj
+**/node_modules
+**/vendor
+**/coverage
+
+!FrenchExDev.Mutator.PoSh/test/Artifacts/
+FrenchExDev.Mutator.PoSh/test/Artifacts/**
+!FrenchExDev.Mutator.PoSh/test/Artifacts/container-bases/
+!FrenchExDev.Mutator.PoSh/test/Artifacts/container-bases/macos/
+!FrenchExDev.Mutator.PoSh/test/Artifacts/container-bases/macos/seed/
+!FrenchExDev.Mutator.PoSh/test/Artifacts/container-bases/macos/seed/**

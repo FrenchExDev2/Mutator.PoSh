@@ -1,0 +1,14 @@
+{
+  "Dotnet": {
+    "Sha512": "49905724de83a961f91ed5a1e79adcfff0d3613325783c6aff6bdb569de82b78724498e8539060ab43c2397243921789868ae69fe38ff08d587682f7b083ab03",
+    "Uri": "https://builds.dotnet.microsoft.com/dotnet/Sdk/10.0.402/dotnet-sdk-10.0.402-osx-x64.pkg",
+    "Version": "10.0.402"
+  },
+  "Fingerprint": "ec1fe92ae9144bd9a64ec0793bf5fb141a39e497e607801c4193d1682aa9bf65",
+  "HomebrewSha256": "5F333BBE53BC490E51E7CCB1DF8779B3DD6EE73A1A7379EFDA216EDB08CCB148",
+  "PowerShell": {
+    "Sha256": "b5173081d521040add595d5c99fbdda4135ba96be82f49d340aa82b1227c319e",
+    "Uri": "https://github.com/PowerShell/PowerShell/releases/download/v7.6.7/powershell-7.6.7-osx-x64.pkg",
+    "Version": "7.6.7"
+  }
+}

@@ -1,0 +1,9 @@
+# Build only after Export-MutatorWindowsBase retained a cleanly stopped base VM.
+ARG BASE_IMAGE=__DOCKURR_IMAGE__
+FROM ${BASE_IMAGE}
+LABEL org.frenchexdev.mutator.base="windows-seed" org.frenchexdev.mutator.fingerprint="__FINGERPRINT__"
+ENV VERSION=2025 RAM_SIZE=4G CPU_CORES=2 DISK_SIZE=64G DISK_FMT=qcow2 MUTATOR_BASE_FINGERPRINT=__FINGERPRINT__
+COPY ["FrenchExDev.Mutator.PoSh/test/Artifacts/container-bases/windows/seed/", "/seed/"]
+COPY ["FrenchExDev.Mutator.PoSh/resources/containers/definitions/guest/Start-SeededGuest.sh", "/opt/mutator/Start-SeededGuest.sh"]
+RUN chmod +x /opt/mutator/Start-SeededGuest.sh && test -f /seed/base.json && command -v qemu-img && command -v jq
+ENTRYPOINT ["/usr/bin/tini", "-s", "/opt/mutator/Start-SeededGuest.sh"]

@@ -1,0 +1,7 @@
+# PowerShell Core in the Linux host of a VM image. Guest PowerShell remains separate.
+COPY --from=mutator-pwsh /opt/microsoft/powershell/7/ /opt/microsoft/powershell/7/
+# The VM host already supplies ICU, Kerberos, OpenSSL and libstdc++ for Samba/QEMU.
+# The following execution is the capability gate; no distribution upgrade is performed.
+RUN chmod +x /opt/microsoft/powershell/7/pwsh && ln -s /opt/microsoft/powershell/7/pwsh /usr/local/bin/pwsh
+RUN ["pwsh", "-NoLogo", "-NoProfile", "-Command", "if ($PSVersionTable.PSEdition -ne 'Core' -or $PSVersionTable.PSVersion.ToString() -ne '__PWSH_VERSION__') { throw 'Required PowerShell Core version is unavailable' }"]
+LABEL org.frenchexdev.mutator.controller-fingerprint="__CONTROLLER_FINGERPRINT__"

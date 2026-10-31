@@ -1,0 +1,11 @@
+# Mutator owns this configuration: sandboxes match no project root, workers share no history
+# and native output is never persisted outside the run directory.
+history:
+  enabled: false
+measurement:
+  enabled: false
+contexts:
+  mutator:
+    moduleGeneration:
+      namespace: FrenchExDev.Mutator
+      outputRoot: ./unused-generated-modules

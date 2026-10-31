@@ -1,0 +1,1189 @@
+[
+  {
+    "Commands": [
+      "ag"
+    ],
+    "ManifestSHA256": "E84FDA90B2A499FB33170A6190202D73A0A162B9167BBF28D3C98DDFF44D6EEF",
+    "Name": "FrenchExDev.Tools.Ag.PoSh",
+    "Profile": "Ag",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "ansible-playbook"
+    ],
+    "ManifestSHA256": "8B1B1922A093371502400CD69A7E488D9243F35EE19CF97CAB5D924E1F5BFE8F",
+    "Name": "FrenchExDev.Tools.AnsiblePlaybook.PoSh",
+    "Profile": "AnsiblePlaybook",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "artisan",
+      "php"
+    ],
+    "ManifestSHA256": "4799410C4A57D0C79D9195D68CE35B6ED8A6C9A869812AF5A8FE14C79A12FA1B",
+    "Name": "FrenchExDev.Tools.Artisan.PoSh",
+    "Profile": "Artisan",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "ast-grep"
+    ],
+    "ManifestSHA256": "927857171EF68A6697CD38D664707322CFF41B5C8000255CFF1472F49E52D525",
+    "Name": "FrenchExDev.Tools.AstGrep.PoSh",
+    "Profile": "AstGrep",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "aws"
+    ],
+    "ManifestSHA256": "91FED516022A744EEC002E941D8FE5F07E2769F68304F097CBE42E5FB910684B",
+    "Name": "FrenchExDev.Tools.Aws.PoSh",
+    "Profile": "Aws",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "basedpyright"
+    ],
+    "ManifestSHA256": "804CCB854D6A13F7FF5882212D70884E65B542ED5F317B7739C8321F142CDB1E",
+    "Name": "FrenchExDev.Tools.Basedpyright.PoSh",
+    "Profile": "Basedpyright",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "biome"
+    ],
+    "ManifestSHA256": "879EFD53F83B8186433591AEF71A1A82FCEE998A1E9EF31FC533D40D61208317",
+    "Name": "FrenchExDev.Tools.Biome.PoSh",
+    "Profile": "Biome",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "black"
+    ],
+    "ManifestSHA256": "F95D6ED0878DA46306B70A17735E6C1E8E466856CE4B8B1F05A49A0B3BFE4621",
+    "Name": "FrenchExDev.Tools.Black.PoSh",
+    "Profile": "Black",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "brew"
+    ],
+    "ManifestSHA256": "690506BE13BBEF77BFCBC515482797131D390DBA1217D928B2E66EC194CA4405",
+    "Name": "FrenchExDev.Tools.Brew.PoSh",
+    "Profile": "Brew",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "bun",
+      "bunx"
+    ],
+    "ManifestSHA256": "4B4750348B04B2DBE209F0671023FEC23255B15539EFB95594CBA237D3F781F0",
+    "Name": "FrenchExDev.Tools.Bun.PoSh",
+    "Profile": "Bun",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "bundle"
+    ],
+    "ManifestSHA256": "AC131D4763F5199A5187254332C13056E7118234F229695C8B567EA6DC4C3A73",
+    "Name": "FrenchExDev.Tools.Bundle.PoSh",
+    "Profile": "Bundle",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "cargo"
+    ],
+    "ManifestSHA256": "65D2AA6174E2D63F3B1468293F07F2AC4842A968D0C4108EA5A7C8D4D5EE4E25",
+    "Name": "FrenchExDev.Tools.Cargo.PoSh",
+    "Profile": "Cargo",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "cat"
+    ],
+    "ManifestSHA256": "26C6645C070DF5572724C5D7CA577F17FC67EF09F21AE9F34B07D58508C14694",
+    "Name": "FrenchExDev.Tools.Cat.PoSh",
+    "Profile": "Cat",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "cmake"
+    ],
+    "ManifestSHA256": "48983BF069696E3BD5BFFA1059D257E5A46BB0A39893F820B2D683FA2002E28D",
+    "Name": "FrenchExDev.Tools.Cmake.PoSh",
+    "Profile": "Cmake",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "composer"
+    ],
+    "ManifestSHA256": "9FA7D2D96DC59C2E62731606FC5C15C4D709F5B559C19C8B331FD3D1E73976CE",
+    "Name": "FrenchExDev.Tools.Composer.PoSh",
+    "Profile": "Composer",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "ctest"
+    ],
+    "ManifestSHA256": "5C0FF7D21AFDF2AF1CBE5A96FA0851FD68CB8B78B37F596B76CE6E8F2A52B9A9",
+    "Name": "FrenchExDev.Tools.Ctest.PoSh",
+    "Profile": "Ctest",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "curl"
+    ],
+    "ManifestSHA256": "9DAD04F8C7670C507B623BB64A8730234136E9171F2710A969D9168C512C7C85",
+    "Name": "FrenchExDev.Tools.Curl.PoSh",
+    "Profile": "Curl",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "deno"
+    ],
+    "ManifestSHA256": "605205F54829F0B0F04985D7F2C95C75E7EA649E2BD4D4A30B2A5203D427D94C",
+    "Name": "FrenchExDev.Tools.Deno.PoSh",
+    "Profile": "Deno",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "df"
+    ],
+    "ManifestSHA256": "980013DF4AF293A9F6575102FB0F607D1657C7F6874551A41AA9E7FF1005844B",
+    "Name": "FrenchExDev.Tools.Df.PoSh",
+    "Profile": "Df",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "diff"
+    ],
+    "ManifestSHA256": "05F12B9872D5825CCE0D232A450F0C7AE3631965BBC93801A4020DC7E284D51F",
+    "Name": "FrenchExDev.Tools.Diff.PoSh",
+    "Profile": "Diff",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "docker"
+    ],
+    "ManifestSHA256": "140ECB5CA56004EC2B5F2FC92094C4A4C27DF5F295274655154592645858ADEB",
+    "Name": "FrenchExDev.Tools.Docker.PoSh",
+    "Profile": "Docker",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "dotnet"
+    ],
+    "ManifestSHA256": "B3F7A4F4ABF18B3DDBCA1C53A4370708AB86B3BA9ECEF7EC5D560664CF521892",
+    "Name": "FrenchExDev.Tools.Dotnet.PoSh",
+    "Profile": "Dotnet",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "du"
+    ],
+    "ManifestSHA256": "EE2AB9CCBAF6E5898BB9146389212DEC679BA07A6DF5ED6195A3F27BF563E68E",
+    "Name": "FrenchExDev.Tools.Du.PoSh",
+    "Profile": "Du",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "ecs"
+    ],
+    "ManifestSHA256": "82E21505F565EF0CE45187CDB6620F64E0C776DA52C90D5B5B163AD7F79E422B",
+    "Name": "FrenchExDev.Tools.Ecs.PoSh",
+    "Profile": "Ecs",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "env"
+    ],
+    "ManifestSHA256": "650EB3A8E8CC620DF5E341B8F64073DA260E734A5D5927744FACB1C57607EF8A",
+    "Name": "FrenchExDev.Tools.Env.PoSh",
+    "Profile": "Env",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "eslint"
+    ],
+    "ManifestSHA256": "F45765BE1FBEDEBAEEB1729B8C29D77A149A186701DF51439B3D42124868D43C",
+    "Name": "FrenchExDev.Tools.Eslint.PoSh",
+    "Profile": "Eslint",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "fail2ban-client"
+    ],
+    "ManifestSHA256": "1EB1A079A70C28FAB62C17A8D1D3D623851AA6BDEAC5B698FF38B2314FC2A142",
+    "Name": "FrenchExDev.Tools.Fail2banClient.PoSh",
+    "Profile": "Fail2banClient",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "fd"
+    ],
+    "ManifestSHA256": "6BCE7F1DF670A1DCA0BC9438941E7DA6C742B92A718FCC71B6E17536C06E41AF",
+    "Name": "FrenchExDev.Tools.Fd.PoSh",
+    "Profile": "Fd",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "find"
+    ],
+    "ManifestSHA256": "C880FF60C4DDD9D40CA954EC95A92806BBFA02B6FD3507443843A6E9FA7F5975",
+    "Name": "FrenchExDev.Tools.Find.PoSh",
+    "Profile": "Find",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "flake8"
+    ],
+    "ManifestSHA256": "1AFB1F577ABD6B8354BDB59E05A608DEF0B70F9541B129F4DD86E4FFDC31F5C5",
+    "Name": "FrenchExDev.Tools.Flake8.PoSh",
+    "Profile": "Flake8",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "gcc"
+    ],
+    "ManifestSHA256": "4E9E33370E71EA3CA762ADED0B36B47C31CD0FB6AB5E089A65B700861BE54706",
+    "Name": "FrenchExDev.Tools.Gcc.PoSh",
+    "Profile": "Gcc",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "gcloud"
+    ],
+    "ManifestSHA256": "1FE0B5BA12B775730DAD228C3EAE565E164D2B74BFB1EDDA5FE488CE2FE1332A",
+    "Name": "FrenchExDev.Tools.Gcloud.PoSh",
+    "Profile": "Gcloud",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "gh"
+    ],
+    "ManifestSHA256": "3B32D48ED84A108CA68DECE2E0062E17FE61FB2D8ECD40307182932B69745D8A",
+    "Name": "FrenchExDev.Tools.Gh.PoSh",
+    "Profile": "Gh",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "git"
+    ],
+    "ManifestSHA256": "47C80F0DF62B0788C1C4F0B3A1021B7CBDBB146C738A1017FE9CFC0C268A34EE",
+    "Name": "FrenchExDev.Tools.Git.PoSh",
+    "Profile": "Git",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "glab"
+    ],
+    "ManifestSHA256": "14862CEBD746FD8784E206C9C0DE824B9660A872D351CA08396FFCC618A0BFD3",
+    "Name": "FrenchExDev.Tools.Glab.PoSh",
+    "Profile": "Glab",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "go"
+    ],
+    "ManifestSHA256": "07219EAA552F0CE9047ABC507F3DB9399F342FB40DDF43CE0A6598F9C6F65E07",
+    "Name": "FrenchExDev.Tools.Go.PoSh",
+    "Profile": "Go",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "golangci-lint"
+    ],
+    "ManifestSHA256": "E7010E7962F73311A6F730F75769074B54A27758A38CB26933F21CA88576FA57",
+    "Name": "FrenchExDev.Tools.GolangciLint.PoSh",
+    "Profile": "GolangciLint",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "g++"
+    ],
+    "ManifestSHA256": "1C95F9AE179B433A58C4394A30066A9F1F613C0AB67292BEB7FCE0D2E756A71F",
+    "Name": "FrenchExDev.Tools.Gpp.PoSh",
+    "Profile": "Gpp",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "./gradlew",
+      "gradle",
+      "gradlew",
+      "gradlew.bat",
+      ".\\gradlew.bat"
+    ],
+    "ManifestSHA256": "0986F5CDCAE06100E70144D2D9092660865D3A5732102D03FDB35D9BB7EC241A",
+    "Name": "FrenchExDev.Tools.Gradle.PoSh",
+    "Profile": "Gradle",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "grep"
+    ],
+    "ManifestSHA256": "C2FCE59FD157CBB20FED49C6AC2F3CD3BD46E5DE1907463019D3BE6C85727EEE",
+    "Name": "FrenchExDev.Tools.Grep.PoSh",
+    "Profile": "Grep",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "gt"
+    ],
+    "ManifestSHA256": "63AF3F3C7D3E919D54BB7EA63F34D3CC332C24EB619046451CABC1D794365C15",
+    "Name": "FrenchExDev.Tools.Gt.PoSh",
+    "Profile": "Gt",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "hadolint"
+    ],
+    "ManifestSHA256": "C972C12185139CF3EA070A6B3D7C0D7115D7F8CDB2F39E6DA5A4C55A2FE05592",
+    "Name": "FrenchExDev.Tools.Hadolint.PoSh",
+    "Profile": "Hadolint",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "head"
+    ],
+    "ManifestSHA256": "64F4FB6D92A58B009D904A2F5E31944E1B4B5FF85FECF06461A172A43EB28157",
+    "Name": "FrenchExDev.Tools.Head.PoSh",
+    "Profile": "Head",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "helm"
+    ],
+    "ManifestSHA256": "B6D3F96F7D9086E87CFAF47DE7315E4C924CCA71C0B6E8004CC4F1FCD3C9208F",
+    "Name": "FrenchExDev.Tools.Helm.PoSh",
+    "Profile": "Helm",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "iptables"
+    ],
+    "ManifestSHA256": "92B2347E038C07A375B33C9B5A8DE64E405A952AA7374CE9B6AAC5776B649C26",
+    "Name": "FrenchExDev.Tools.Iptables.PoSh",
+    "Profile": "Iptables",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "java"
+    ],
+    "ManifestSHA256": "0D66ED4D5E0AFAE5750E16381104B2802DEF4783F732D2916878B93AB7BA7758",
+    "Name": "FrenchExDev.Tools.Java.PoSh",
+    "Profile": "Java",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "jest"
+    ],
+    "ManifestSHA256": "EC81B4275205927EBE45AD1FC5E75B06618FF2DC6CCD0F4F5884577878877220",
+    "Name": "FrenchExDev.Tools.Jest.PoSh",
+    "Profile": "Jest",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "jira"
+    ],
+    "ManifestSHA256": "7FB5D47C02D2EDDCFAC8D4C91EE5346FF3C8F1B51765F3DB50D9368D1AA032A8",
+    "Name": "FrenchExDev.Tools.Jira.PoSh",
+    "Profile": "Jira",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "jj"
+    ],
+    "ManifestSHA256": "391404A45F5E4078F0FD56AA4A4BD983DCD7E77BD889ACDE637B8091FC221D25",
+    "Name": "FrenchExDev.Tools.Jj.PoSh",
+    "Profile": "Jj",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "journalctl"
+    ],
+    "ManifestSHA256": "0D64A6C8A23EC57E6BD9B6A8286372C17EC1896EB239F0CACF5CF89566CE11D8",
+    "Name": "FrenchExDev.Tools.Journalctl.PoSh",
+    "Profile": "Journalctl",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "jq"
+    ],
+    "ManifestSHA256": "891E466172610DC5C60CAEFB9A0C29FA519B187DFAB5F467CB9908EDFC309DFE",
+    "Name": "FrenchExDev.Tools.Jq.PoSh",
+    "Profile": "Jq",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "just"
+    ],
+    "ManifestSHA256": "70659C040FE5E3ACB3FAD2EF7477E21D8CA92F8ECF20ED652836ADAFD44DA2F6",
+    "Name": "FrenchExDev.Tools.Just.PoSh",
+    "Profile": "Just",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "kubectl"
+    ],
+    "ManifestSHA256": "0B5C70A1262699D3B168355E3170DD0252E68C3DA15F8AEF61F491B34E9BE0A0",
+    "Name": "FrenchExDev.Tools.Kubectl.PoSh",
+    "Profile": "Kubectl",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "liquibase"
+    ],
+    "ManifestSHA256": "C0EB95E30D6385BEB24E0DEEA771790B41EA999EA60313F9DF9A9769CD7A1202",
+    "Name": "FrenchExDev.Tools.Liquibase.PoSh",
+    "Profile": "Liquibase",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "ls"
+    ],
+    "ManifestSHA256": "E48C055C1ADF065056760A1D58A5B6D9FC9FC5F2ED8557E2D15BF7D6453977F0",
+    "Name": "FrenchExDev.Tools.Ls.PoSh",
+    "Profile": "Ls",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "make"
+    ],
+    "ManifestSHA256": "27DDC0193B9A5F3C26A04E6E9E00B2754556E98777D316F18EBD9D17F9C2B674",
+    "Name": "FrenchExDev.Tools.Make.PoSh",
+    "Profile": "Make",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "markdownlint"
+    ],
+    "ManifestSHA256": "C9037189213C4FC77CF8961859A5C1D72BDD8A06ADB7838870AF6B44AE783DCD",
+    "Name": "FrenchExDev.Tools.Markdownlint.PoSh",
+    "Profile": "Markdownlint",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "mise"
+    ],
+    "ManifestSHA256": "B62101AEA390347AF4E6CC330CBFBAACBB3C53F1F1056352ACB51A4C604CC207",
+    "Name": "FrenchExDev.Tools.Mise.PoSh",
+    "Profile": "Mise",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "mix"
+    ],
+    "ManifestSHA256": "1C2D3F2081625D5D3603DD77462CF96246E6C529B7E6AFA57EFB477897C91AE6",
+    "Name": "FrenchExDev.Tools.Mix.PoSh",
+    "Profile": "Mix",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "./mvnw",
+      "mvn",
+      "mvnw",
+      "mvnw.cmd",
+      ".\\mvnw.cmd",
+      "mvnd",
+      "mvnd.cmd"
+    ],
+    "ManifestSHA256": "7339707439E158CAEC671AA46668866851BB879DBD996D5FF4667B74689E7474",
+    "Name": "FrenchExDev.Tools.Mvn.PoSh",
+    "Profile": "Mvn",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "mypy"
+    ],
+    "ManifestSHA256": "26C0EABBB16DA15925EF0857D44B60D5D75A97A69C9CA193647484A963ACE02D",
+    "Name": "FrenchExDev.Tools.Mypy.PoSh",
+    "Profile": "Mypy",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "next"
+    ],
+    "ManifestSHA256": "77C4FFA4193370CA89207B5A2A074A4D9722D153BE9A285938EE83F2C03BD854",
+    "Name": "FrenchExDev.Tools.Next.PoSh",
+    "Profile": "Next",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "ninja"
+    ],
+    "ManifestSHA256": "85DFE3813601CA7D2B6EC5BF4C806C4DF38FF1CBD095D1B863FE176780C5F583",
+    "Name": "FrenchExDev.Tools.Ninja.PoSh",
+    "Profile": "Ninja",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "npm"
+    ],
+    "ManifestSHA256": "144B984C10FEFAE4360B543976D456EB6EB4E85C668EC75E9819E529FDDA71F2",
+    "Name": "FrenchExDev.Tools.Npm.PoSh",
+    "Profile": "Npm",
+    "Dependencies": [
+      "FrenchExDev.Tools.Jest.PoSh"
+    ]
+  },
+  {
+    "Commands": [
+      "npx"
+    ],
+    "ManifestSHA256": "CB54B9021EDFAF6F25E48F689D599407A1CC5FB665D17D6B26E2CB96B040E923",
+    "Name": "FrenchExDev.Tools.Npx.PoSh",
+    "Profile": "Npx",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "nx"
+    ],
+    "ManifestSHA256": "BC8FC9F3486F39E57323D697F12F178ACBE2C5DB6AA44E89B93D5B9D5129CAA2",
+    "Name": "FrenchExDev.Tools.Nx.PoSh",
+    "Profile": "Nx",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "oc"
+    ],
+    "ManifestSHA256": "F0C0A8FA32A22E8E0EEC421E1A82DF404EAA29232DBAA371237FB444601633BB",
+    "Name": "FrenchExDev.Tools.Oc.PoSh",
+    "Profile": "Oc",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "ollama"
+    ],
+    "ManifestSHA256": "19A780BD18FF5D61506C0C3FAE2DD2BE0DCEACF3BE3A3FDB1CD11AC68BAB83E0",
+    "Name": "FrenchExDev.Tools.Ollama.PoSh",
+    "Profile": "Ollama",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "oxlint"
+    ],
+    "ManifestSHA256": "2233172F7030CA6C981F3572313EA263ED372E0FDF1379871AAD80072C6B68B3",
+    "Name": "FrenchExDev.Tools.Oxlint.PoSh",
+    "Profile": "Oxlint",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "paratest"
+    ],
+    "ManifestSHA256": "1C62BB36673DA348B62141A783CE7C57BB251B7A984AFE012CAC26F924C892AF",
+    "Name": "FrenchExDev.Tools.Paratest.PoSh",
+    "Profile": "Paratest",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "pest"
+    ],
+    "ManifestSHA256": "CB130BDA31EAF98B3EED8403777251E9D19A780E3497B134CB0ED0D957DDD6DD",
+    "Name": "FrenchExDev.Tools.Pest.PoSh",
+    "Profile": "Pest",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "php"
+    ],
+    "ManifestSHA256": "16B0FE8693A45DE76F679638C0E5C4908A73A02ACC87D064BD4C3C77D30030F5",
+    "Name": "FrenchExDev.Tools.Php.PoSh",
+    "Profile": "Php",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "phpstan"
+    ],
+    "ManifestSHA256": "A3AA586D63637DABF1FA79A421F172C0B21550F1263A9A49ECFAA992E48FF057",
+    "Name": "FrenchExDev.Tools.Phpstan.PoSh",
+    "Profile": "Phpstan",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "php",
+      "phpt"
+    ],
+    "ManifestSHA256": "B12108CD237AA391750860B5E040E09916C5749628BA54C155C4BA17E8CBF64D",
+    "Name": "FrenchExDev.Tools.Phpt.PoSh",
+    "Profile": "Phpt",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "phpunit"
+    ],
+    "ManifestSHA256": "D9751F87066741062B5685F228196DF7606F6BF9A0CFE192CF902BFB46AED4BF",
+    "Name": "FrenchExDev.Tools.Phpunit.PoSh",
+    "Profile": "Phpunit",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "ping"
+    ],
+    "ManifestSHA256": "7E39E7E3CAAF7EDB4DFFC7E4E201F3F5F9C994AC07253B1D9DE7F3D9A4340C75",
+    "Name": "FrenchExDev.Tools.Ping.PoSh",
+    "Profile": "Ping",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "pint"
+    ],
+    "ManifestSHA256": "3A9D9BD7977F5BB7BFED940F044CA2155CEE2CF652199E697F0D905C5D45B51C",
+    "Name": "FrenchExDev.Tools.Pint.PoSh",
+    "Profile": "Pint",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "pio"
+    ],
+    "ManifestSHA256": "18ECA56EF3C02E448907D75086BD82B5ABD2D527DB3D31FDCF1AD7935BCC311A",
+    "Name": "FrenchExDev.Tools.Pio.PoSh",
+    "Profile": "Pio",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "pip",
+      "pip3"
+    ],
+    "ManifestSHA256": "23868588D71452307C72F3FB34898C13D825A86462AB10BA7C4ABC2406E845D8",
+    "Name": "FrenchExDev.Tools.Pip.PoSh",
+    "Profile": "Pip",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "playwright"
+    ],
+    "ManifestSHA256": "1FB33B440482582E2627FF2048B6078DF5204C9C69A126485B4B157653DB1A72",
+    "Name": "FrenchExDev.Tools.Playwright.PoSh",
+    "Profile": "Playwright",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "pnpm"
+    ],
+    "ManifestSHA256": "F9C1DCA11D528EAFC36E3BFD84B1E478FD6DBA10ECBF844930C7D628E9ED51F9",
+    "Name": "FrenchExDev.Tools.Pnpm.PoSh",
+    "Profile": "Pnpm",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "podman"
+    ],
+    "ManifestSHA256": "CA1238B7D9ADA3F8EEA501E8ED431EE986055E8F0167EBAB5B881741574CE3E1",
+    "Name": "FrenchExDev.Tools.Podman.PoSh",
+    "Profile": "Podman",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "poetry"
+    ],
+    "ManifestSHA256": "07F9FC81E0C97398CDC2583B75458EB7053550B985329F80EFB3696BAD3C6400",
+    "Name": "FrenchExDev.Tools.Poetry.PoSh",
+    "Profile": "Poetry",
+    "Dependencies": []
+  },
+  {
+    "Commands": [],
+    "ManifestSHA256": "6849EFA566E53F8CE0AFB1C2B234E1D3B975F82098E92C34255570F4715A4343",
+    "Name": "FrenchExDev.Mutator.PoSh",
+    "Profile": "Engine",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "pre-commit"
+    ],
+    "ManifestSHA256": "5CBC66EEFA28E38C7FA2F3B9AEB6AC2AE657B1CD054D06F7B268F0AB81412473",
+    "Name": "FrenchExDev.Tools.PreCommit.PoSh",
+    "Profile": "PreCommit",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "prettier"
+    ],
+    "ManifestSHA256": "3D8C78A651FD10053AD144366640A09DBE0DD1BA2FDDF06746A2B7CD0E7CA009",
+    "Name": "FrenchExDev.Tools.Prettier.PoSh",
+    "Profile": "Prettier",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "prisma"
+    ],
+    "ManifestSHA256": "233CFEDF3A079B9FFDA0CD650A838B652315A707B3A2914F7E1F46DCA11E4375",
+    "Name": "FrenchExDev.Tools.Prisma.PoSh",
+    "Profile": "Prisma",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "ps"
+    ],
+    "ManifestSHA256": "C7C8CDC0129E4413A81837FC7E24DF6D65F860FF5C5A59D82BA1BCE6EB4B9999",
+    "Name": "FrenchExDev.Tools.Ps.PoSh",
+    "Profile": "Ps",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "psql"
+    ],
+    "ManifestSHA256": "99A3DDEDE997750880037CE1AB86E8890632FE0B276DA04812967A70730347CB",
+    "Name": "FrenchExDev.Tools.Psql.PoSh",
+    "Profile": "Psql",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "pulumi"
+    ],
+    "ManifestSHA256": "D1A730862FC6F49FBAF66B4C1216E7A81ADBC25283A2D71DB3357FF12676759F",
+    "Name": "FrenchExDev.Tools.Pulumi.PoSh",
+    "Profile": "Pulumi",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "pylint"
+    ],
+    "ManifestSHA256": "BB126D8ACC9EF852516248FCDA3C875E75E595DC750751CBE54B48B194FB0F36",
+    "Name": "FrenchExDev.Tools.Pylint.PoSh",
+    "Profile": "Pylint",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "py.test",
+      "pytest"
+    ],
+    "ManifestSHA256": "4AA761CCA7FEB030D7A5F42FCB5196A54EECC8D657496C2C565A877C9CB54B14",
+    "Name": "FrenchExDev.Tools.Pytest.PoSh",
+    "Profile": "Pytest",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "python",
+      "python3",
+      "py"
+    ],
+    "ManifestSHA256": "229CF0D2C9A45266A6A5B6670E17E8D822896860004BD76C6C73EFBC5870DDB0",
+    "Name": "FrenchExDev.Tools.Python.PoSh",
+    "Profile": "Python",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "quarto"
+    ],
+    "ManifestSHA256": "1BCE4280A63E9B7696ED2FECB9B205ECB43C8EA017426DA18AA73BE5A3E31050",
+    "Name": "FrenchExDev.Tools.Quarto.PoSh",
+    "Profile": "Quarto",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "rails",
+      "bundle"
+    ],
+    "ManifestSHA256": "A6D4DF6C44AF3D8806D3F53281015F4F3464BDDDAB69F031A3D30513DCE3BBB5",
+    "Name": "FrenchExDev.Tools.Rails.PoSh",
+    "Profile": "Rails",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "rake",
+      "bundle"
+    ],
+    "ManifestSHA256": "C3DA0DFE267A6856ACE94CEA0D88B83E1F2827DBA6CBF30281DA81DA43CC7869",
+    "Name": "FrenchExDev.Tools.Rake.PoSh",
+    "Profile": "Rake",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "rg"
+    ],
+    "ManifestSHA256": "A606CB7F60923E619A4D9966AC37A2E1E5E3ED4BF465891636CF0A4A21648ADB",
+    "Name": "FrenchExDev.Tools.Rg.PoSh",
+    "Profile": "Rg",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "rspec",
+      "bundle"
+    ],
+    "ManifestSHA256": "839820152B2ED08655F38114C0F7E56870E89B89F6FA69E5AC3DB4DE71BB5A92",
+    "Name": "FrenchExDev.Tools.Rspec.PoSh",
+    "Profile": "Rspec",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "rsync"
+    ],
+    "ManifestSHA256": "847E453EDAD647FFA38A938B43571587CFEF1530546F3C2DBD5C3A92E548A483",
+    "Name": "FrenchExDev.Tools.Rsync.PoSh",
+    "Profile": "Rsync",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "rubocop",
+      "bundle"
+    ],
+    "ManifestSHA256": "550AEF1B5F5B75D3D68BFAD77A55FE0081E89C1E3D9F03663C0E2C32655C961D",
+    "Name": "FrenchExDev.Tools.Rubocop.PoSh",
+    "Profile": "Rubocop",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "ruff"
+    ],
+    "ManifestSHA256": "A4998A70B5F65A33AFFDED0B6529FED72F47358AED4C6AFCB60696F08D190595",
+    "Name": "FrenchExDev.Tools.Ruff.PoSh",
+    "Profile": "Ruff",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "sbt"
+    ],
+    "ManifestSHA256": "5729940712A6B110D04FA5B34B34203938695559CA91CB786BA1BBA63848E441",
+    "Name": "FrenchExDev.Tools.Sbt.PoSh",
+    "Profile": "Sbt",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "shellcheck"
+    ],
+    "ManifestSHA256": "8BBF0C32C0A9F6BCE0817D1C1B2FB63FF50D6228EF488268B4E779C3D8F1683A",
+    "Name": "FrenchExDev.Tools.Shellcheck.PoSh",
+    "Profile": "Shellcheck",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "shopify"
+    ],
+    "ManifestSHA256": "1ED57404E1037E94D37787473A43E5A32C11735B718825499B88C5FEF532904C",
+    "Name": "FrenchExDev.Tools.Shopify.PoSh",
+    "Profile": "Shopify",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "skopeo"
+    ],
+    "ManifestSHA256": "99E29F41AE5322BB5418FF0631C729097B6760F3A692CA0CFD0D0CCC8E19DE2E",
+    "Name": "FrenchExDev.Tools.Skopeo.PoSh",
+    "Profile": "Skopeo",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "sops"
+    ],
+    "ManifestSHA256": "EDE05ABEE1EF49DBEF1DB919E888C997A0330868616C929A93BD2CE804C636C7",
+    "Name": "FrenchExDev.Tools.Sops.PoSh",
+    "Profile": "Sops",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "sqlfluff"
+    ],
+    "ManifestSHA256": "FD4668D971ACFE8ED640DE455C8162EFE3CCBCA995231B6C9396AAFC2D952F37",
+    "Name": "FrenchExDev.Tools.Sqlfluff.PoSh",
+    "Profile": "Sqlfluff",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "ssh"
+    ],
+    "ManifestSHA256": "06BBA3F577E134671552080CDE703063C45087ADF9784CB50F8868191B287DEA",
+    "Name": "FrenchExDev.Tools.Ssh.PoSh",
+    "Profile": "Ssh",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "stat"
+    ],
+    "ManifestSHA256": "E024296C30CB425D6138BE60C1803D401B73C324238F28C22BBD76BC717B3391",
+    "Name": "FrenchExDev.Tools.Stat.PoSh",
+    "Profile": "Stat",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "swift"
+    ],
+    "ManifestSHA256": "C8B74933EB1F934A4E3EBC8FE0D5CAA15A08981D4BAA6671411AA5BA718635F7",
+    "Name": "FrenchExDev.Tools.Swift.PoSh",
+    "Profile": "Swift",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "systemctl"
+    ],
+    "ManifestSHA256": "C18562AF57F9F887E6368FFDFBE2EB1EDF343C06FBFFC63F2811EACC553C5003",
+    "Name": "FrenchExDev.Tools.Systemctl.PoSh",
+    "Profile": "Systemctl",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "tail"
+    ],
+    "ManifestSHA256": "C3C58F42B3D820D95A71376E6EFE19F4082929A6067B88F0208D214E6C0F3C1E",
+    "Name": "FrenchExDev.Tools.Tail.PoSh",
+    "Profile": "Tail",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "task"
+    ],
+    "ManifestSHA256": "B0AD93F6AB2E596EE3291A3239047CA9F338E504359C90673CCA74B296D93E85",
+    "Name": "FrenchExDev.Tools.Task.PoSh",
+    "Profile": "Task",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "terraform"
+    ],
+    "ManifestSHA256": "6EFFE153248980119A655C3A21A2725666BFF622D4836688485BE61F1BB04BFB",
+    "Name": "FrenchExDev.Tools.Terraform.PoSh",
+    "Profile": "Terraform",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "tofu"
+    ],
+    "ManifestSHA256": "7B9CDBB0EA18AE87E58D7B95139CED94C739931F5DA7BD260C41E69C6B88DA68",
+    "Name": "FrenchExDev.Tools.Tofu.PoSh",
+    "Profile": "Tofu",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "tree"
+    ],
+    "ManifestSHA256": "67B043D665C049765368A4A007A219ED84F40B7ACB99C9D1A6E41AC1ECC5B3C9",
+    "Name": "FrenchExDev.Tools.Tree.PoSh",
+    "Profile": "Tree",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "trunk"
+    ],
+    "ManifestSHA256": "A0F410C3F799724CB3226CA14EEC2D7895F9320696D958F0A1253DAA045322A6",
+    "Name": "FrenchExDev.Tools.Trunk.PoSh",
+    "Profile": "Trunk",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "tsc"
+    ],
+    "ManifestSHA256": "DD166B170AA7D8D7DA8D76F1B1DFF08275EBD28DB20B2F143036651B71D7EACB",
+    "Name": "FrenchExDev.Tools.Tsc.PoSh",
+    "Profile": "Tsc",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "turbo"
+    ],
+    "ManifestSHA256": "1AAC522E07241FD7C3FC7019CE1826E177ACFEDB858D8E2445EC04B2CC96C5BC",
+    "Name": "FrenchExDev.Tools.Turbo.PoSh",
+    "Profile": "Turbo",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "ty"
+    ],
+    "ManifestSHA256": "E100CE950B07D40CA9F174F8DB4991EB7F926C5BD60829025F3CEE5C0393E7ED",
+    "Name": "FrenchExDev.Tools.Ty.PoSh",
+    "Profile": "Ty",
+    "Dependencies": []
+  },
+  {
+    "Commands": [],
+    "ManifestSHA256": "45F4503E516E2ACA0D51A3191F9B409072D63977570ACC06A5FF24A2EB9CE326",
+    "Name": "FrenchExDev.Tools.Utility.Agent.PoSh",
+    "Profile": "Utility.Agent",
+    "Dependencies": []
+  },
+  {
+    "Commands": [],
+    "ManifestSHA256": "325FF5331A4EF88DA68EF61A1AE299DAC6B9E041B2CC83F9798228B357E7F70C",
+    "Name": "FrenchExDev.Tools.Utility.Filters.PoSh",
+    "Profile": "Utility.Filters",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "uv"
+    ],
+    "ManifestSHA256": "9B375C49A768253149A0B6D828549899719AE29EA4A080E39F5E6C84ADC25201",
+    "Name": "FrenchExDev.Tools.Uv.PoSh",
+    "Profile": "Uv",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "vitest"
+    ],
+    "ManifestSHA256": "CA53C7AA1473A13295DB5D2409D899A55613A71ABCCAF1406C8C11A7BD8EAC66",
+    "Name": "FrenchExDev.Tools.Vitest.PoSh",
+    "Profile": "Vitest",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "wc"
+    ],
+    "ManifestSHA256": "461F127D0F8415B0CCDE2C6683BCB125140F143D6B120BC46A63303E1EAD1DA5",
+    "Name": "FrenchExDev.Tools.Wc.PoSh",
+    "Profile": "Wc",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "wget"
+    ],
+    "ManifestSHA256": "68CE4BCFBA2BC391382281CA3B922808790B509E0BA4E2BE53EEAA32B33AA98C",
+    "Name": "FrenchExDev.Tools.Wget.PoSh",
+    "Profile": "Wget",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "xcodebuild"
+    ],
+    "ManifestSHA256": "306AB96412D06A92DE8139D77D16D312D5B688E494B0E4FDFBA71D004F30F5EE",
+    "Name": "FrenchExDev.Tools.Xcodebuild.PoSh",
+    "Profile": "Xcodebuild",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "yadm"
+    ],
+    "ManifestSHA256": "8A68D306F9C84648F5FE8852B63A32CE3F7DAC170991BC9BD5730AC96901E3B9",
+    "Name": "FrenchExDev.Tools.Yadm.PoSh",
+    "Profile": "Yadm",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "yamllint"
+    ],
+    "ManifestSHA256": "8636C891DBF1C670384F174571D58F757420F15418DB2E8A59EE558B612A2096",
+    "Name": "FrenchExDev.Tools.Yamllint.PoSh",
+    "Profile": "Yamllint",
+    "Dependencies": []
+  },
+  {
+    "Commands": [
+      "yarn"
+    ],
+    "ManifestSHA256": "B7857CB1E97C07EA1F33E6953CEDC5679B6D76DAB8F7962D95BFD7152C099F3F",
+    "Name": "FrenchExDev.Tools.Yarn.PoSh",
+    "Profile": "Yarn",
+    "Dependencies": []
+  }
+]

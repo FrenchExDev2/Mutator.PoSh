@@ -1,0 +1,16 @@
+{
+  "BuildValidated": false,
+  "ControllerFingerprint": "8fb2b51ce44a288390ab53773ad433f96eb4f596c873b9ef521e18e616c60d7a",
+  "Fingerprint": "21b87d6376d152f91265155ef0949d0059ea2300ede5c99acfda16fb48229404",
+  "Images": {
+    "Alpine": "localhost/frenchexdev-mutator-base:alpine-pwsh-7.6.7-21b87d6376d1",
+    "Bootstrap": "localhost/frenchexdev-mutator-base:windows-bootstrap-pwsh-7.6.7-21b87d6376d1-controller-8fb2b51ce44a",
+    "Debian": "localhost/frenchexdev-mutator-base:debian-pwsh-7.6.7-21b87d6376d1",
+    "MacBootstrap": "localhost/frenchexdev-mutator-base:macos-bootstrap-pwsh-7.6.7-ec1fe92ae914-controller-8fb2b51ce44a",
+    "MacOS": "localhost/frenchexdev-mutator-base:macos-pwsh-7.6.7-ec1fe92ae914-controller-8fb2b51ce44a",
+    "Native": "localhost/frenchexdev-mutator-base:windows-native-pwsh-7.6.7-21b87d6376d1",
+    "Swift": "localhost/frenchexdev-mutator-base:swift-pwsh-7.6.7-21b87d6376d1",
+    "Windows": "localhost/frenchexdev-mutator-base:windows-pwsh-7.6.7-21b87d6376d1-controller-8fb2b51ce44a"
+  },
+  "MacFingerprint": "ec1fe92ae9144bd9a64ec0793bf5fb141a39e497e607801c4193d1682aa9bf65"
+}

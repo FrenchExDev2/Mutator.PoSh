@@ -1,0 +1,10 @@
+# Bootstrap common Windows once in a VM, then export its stopped qcow2 disk.
+ARG BASE_IMAGE=__DOCKURR_IMAGE__
+FROM ${BASE_IMAGE}
+LABEL org.frenchexdev.mutator.base="windows" org.frenchexdev.mutator.fingerprint="__FINGERPRINT__"
+ENV VERSION=2025 RAM_SIZE=4G CPU_CORES=2 DISK_SIZE=64G DISK_FMT=qcow2
+COPY ["FrenchExDev.Mutator.PoSh/resources/containers/definitions/bootstrap/", "/oem/mutator/bootstrap/"]
+COPY ["FrenchExDev.Mutator.PoSh/resources/containers/definitions/guest/", "/oem/"]
+COPY ["FrenchExDev.Mutator.PoSh/resources/containers/base/windows-bootstrap/image.json", "/oem/mutator/image.json"]
+# This shared folder receives base-ready.json from the guest, for export validation.
+RUN mkdir -p /shared

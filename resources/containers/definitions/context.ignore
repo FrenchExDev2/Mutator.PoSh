@@ -1,0 +1,8 @@
+**/.git
+**/.cache
+**/test/Artifacts
+**/bin
+**/obj
+**/node_modules
+**/vendor
+**/coverage

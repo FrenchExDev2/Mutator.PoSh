@@ -1,0 +1,27 @@
+name: __PROJECT_NAME__-macos
+services:
+  macos:
+    image: localhost/__IMAGE_NAME__:macos
+    build:
+      context: ../../..
+      dockerfile: __MODULE__/containers/macos/Dockerfile
+    environment:
+      VERSION: "15"
+      RAM_SIZE: "4G"
+      CPU_CORES: "2"
+      DISK_FMT: "qcow2"
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "127.0.0.1:${MUTATOR_MACOS_WEB_PORT:-8007}:8006"
+      - "127.0.0.1:${MUTATOR_MACOS_VNC_PORT:-5900}:5900"
+    volumes:
+      - macos-storage:/storage
+    mem_limit: 6g
+    cpus: 2.0
+    stop_grace_period: 2m
+volumes:
+  macos-storage:

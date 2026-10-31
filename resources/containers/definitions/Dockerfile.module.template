@@ -1,0 +1,18 @@
+# Generated per-tool layer. Build the shared runtime base once before this image.
+ARG BASE_IMAGE=__RUNTIME_BASE__
+FROM ${BASE_IMAGE}
+LABEL org.frenchexdev.mutator.module="__MODULE__" org.frenchexdev.mutator.platform="__PLATFORM__"
+ARG TOOL_VERSION
+ARG TOOL_URL
+ARG TOOL_SHA256
+ENV TOOL_VERSION=${TOOL_VERSION} TOOL_URL=${TOOL_URL} TOOL_SHA256=${TOOL_SHA256} MUTATOR_MODULE=__MODULE__
+COPY ["FrenchExDev.Mutator.PoSh/resources/containers/definitions/bootstrap/", "__ROOT__/bootstrap/"]
+COPY ["__MODULE_SOURCE__/containers/image.json", "__ROOT__/image.json"]
+__TOOL_COPY__
+RUN ["pwsh", "-NoLogo", "-NoProfile", "-File", "__ROOT__/bootstrap/Install-ImageTool.ps1", "-Platform", "__INSTALL_PLATFORM__", "-Root", "__ROOT__"]
+__MODULE_COPIES__
+RUN ["pwsh", "-NoLogo", "-NoProfile", "-File", "__ROOT__/bootstrap/Initialize-ImageModules.ps1", "-Root", "__ROOT__"]
+WORKDIR __ROOT__/workload
+__USER__
+ENTRYPOINT ["pwsh", "-NoLogo", "-NoProfile", "-File", "__ROOT__/bootstrap/Enter-Image.ps1"]
+CMD ["pwsh", "-NoLogo", "-NoProfile"]

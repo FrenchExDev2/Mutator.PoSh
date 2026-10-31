@@ -1,0 +1,12 @@
+# macOS guest on Apple hardware. Uses the prepared common macOS qcow2 base.
+ARG BASE_IMAGE=__RUNTIME_BASE__
+FROM ${BASE_IMAGE}
+RUN ["pwsh", "-NoLogo", "-NoProfile", "-Command", "if ($PSVersionTable.PSEdition -ne 'Core' -or $PSVersionTable.PSVersion -lt [version]'7.6') { throw 'PowerShell Core 7.6+ is required in the container host' }"]
+LABEL org.frenchexdev.mutator.module="__MODULE__" org.frenchexdev.mutator.container-os="linux" org.frenchexdev.mutator.guest-os="macos" org.frenchexdev.mutator.hardware="apple"
+ARG TOOL_VERSION
+ARG TOOL_URL
+ARG TOOL_SHA256
+COPY ["FrenchExDev.Mutator.PoSh/resources/containers/definitions/bootstrap/", "/shared/mutator/bootstrap/"]
+COPY ["__MODULE_SOURCE__/containers/image.json", "/shared/mutator/image.json"]
+RUN printf '%s\n%s\n%s\n' "$TOOL_VERSION" "$TOOL_URL" "$TOOL_SHA256" > /shared/mutator/tool-inputs.txt
+__MODULE_COPIES__

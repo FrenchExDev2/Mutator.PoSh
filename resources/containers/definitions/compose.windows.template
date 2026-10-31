@@ -1,0 +1,29 @@
+# One module/VM at a time; no Windows VM is started by generating this file.
+name: __PROJECT_NAME__
+services:
+  windows:
+    image: localhost/__IMAGE_NAME__:windows
+    build:
+      context: ../../..
+      dockerfile: __MODULE__/containers/windows/Dockerfile
+    environment:
+      VERSION: "2025"
+      RAM_SIZE: "4G"
+      CPU_CORES: "2"
+      DISK_SIZE: "64G"
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "127.0.0.1:${MUTATOR_WEB_PORT:-8006}:8006"
+      - "127.0.0.1:${MUTATOR_RDP_PORT:-3389}:3389/tcp"
+      - "127.0.0.1:${MUTATOR_RDP_PORT:-3389}:3389/udp"
+    volumes:
+      - windows-storage:/storage
+    mem_limit: 6g
+    cpus: 2.0
+    stop_grace_period: 2m
+volumes:
+  windows-storage:

@@ -1,0 +1,31 @@
+{
+  "Cpus": 1,
+  "CreatedUtc": "2026-10-27T01:38:46.8479117Z",
+  "Connection": "podman-frenchexdev-root",
+  "ToolVersion": "qemu-img version 11.1.0 (Debian 1:11.1.0+ds-2)",
+  "Network": "None",
+  "Tool": "qemu-img",
+  "VirtualMachineStarted": false,
+  "Fixtures": [
+    {
+      "Compatibility": "0.10",
+      "Bytes": 196616,
+      "File": "qcow2-v2.qcow2",
+      "VirtualBytes": 1048576,
+      "Version": 2,
+      "BackingFile": null,
+      "Sha256": "9DDFF3F485139A881A3836119B582E64BFD9A97523743CA57F45AE98AB8686DA"
+    },
+    {
+      "Compatibility": "1.1",
+      "Bytes": 196616,
+      "File": "qcow2-v3.qcow2",
+      "VirtualBytes": 1048576,
+      "Version": 3,
+      "BackingFile": null,
+      "Sha256": "0E7DB0D4AD0A3B83D343A88D5991FC5024F7A9EC21C1D0E5F15261EBC3FD587E"
+    }
+  ],
+  "MemoryMiB": 256,
+  "ImageId": "fb3c512f1e7b6b7fbae57094d7523230ce31aa30591b07b260534df7b7369d06"
+}

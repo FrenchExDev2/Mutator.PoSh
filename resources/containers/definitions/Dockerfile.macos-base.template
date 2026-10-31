@@ -1,0 +1,9 @@
+# Prepare this base once on Apple hardware, then export the cleanly stopped VM.
+ARG BASE_IMAGE=__MACOS_IMAGE__
+FROM ${BASE_IMAGE}
+LABEL org.frenchexdev.mutator.base="macos" org.frenchexdev.mutator.fingerprint="__FINGERPRINT__" org.frenchexdev.mutator.hardware="apple"
+ENV VERSION=15 RAM_SIZE=4G CPU_CORES=2 DISK_SIZE=64G DISK_FMT=qcow2
+COPY ["FrenchExDev.Mutator.PoSh/resources/containers/definitions/bootstrap/", "/shared/mutator/bootstrap/"]
+COPY ["FrenchExDev.Mutator.PoSh/resources/containers/definitions/macos/", "/shared/mutator/"]
+COPY ["FrenchExDev.Mutator.PoSh/resources/containers/base/macos-bootstrap/runtime.json", "/shared/mutator/runtime.json"]
+# Complete the macOS installation and run Install-MacOSBase.sh in its terminal.
