@@ -1,4 +1,13 @@
 function Protect-MutatorDiagnostic {
+    <#
+    .SYNOPSIS
+    Mask secrets before delivering a bounded diagnostic message.
+
+    .DESCRIPTION
+    Uses QuietCli protection before truncating to 2048 characters. Failed masking returns a closed
+    notice rather than the original text.
+    #>
+
     param([AllowNull()][string]$Message)
     if(!$Message){return $Message}
     try{

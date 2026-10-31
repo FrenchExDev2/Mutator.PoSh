@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the MemoryWatchdogLoop tests.
+
+.DESCRIPTION
+Retain the actual recovery action/error and honor cooldowns. Repeated pressure must not cause
+unbounded duplicate recovery or invent an owned process target.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'RAM watchdog recovery and cooldown outcomes' {
     It 'retains the actual action and limits repeated recovery: <Scenario>' -ForEach @(

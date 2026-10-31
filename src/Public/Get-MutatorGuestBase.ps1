@@ -1,4 +1,13 @@
 function Get-MutatorGuestBase {
+    <#
+    .SYNOPSIS
+    Inspect owned guest state and readiness.
+
+    .DESCRIPTION
+    Combines retained proof with actual container state. Late readiness cannot override cancellation,
+    failure or abnormal termination.
+    #>
+
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$Path)
     $stored=Read-MutatorGuestRun $Path;$run=$stored.Run

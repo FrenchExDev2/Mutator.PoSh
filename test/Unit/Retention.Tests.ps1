@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the Retention tests.
+
+.DESCRIPTION
+Plan only old successful eligible runs without altering files. Bound displayed candidates while
+keeping exact eligibility counts.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'Read-only retention planning' {
     BeforeEach {

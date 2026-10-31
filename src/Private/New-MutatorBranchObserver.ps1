@@ -1,4 +1,13 @@
 function New-MutatorBranchObserver {
+    <#
+    .SYNOPSIS
+    Create an independently namespaced branch recorder copy.
+
+    .DESCRIPTION
+    Rewrites exact identifiers and environment names without corrupting an enclosing observer. Returns
+    code and identity without writing files.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Pure observer source factory; returns code and fingerprints without writing files or changing the environment.')]
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$Path,

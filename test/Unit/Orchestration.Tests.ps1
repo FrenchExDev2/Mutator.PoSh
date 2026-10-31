@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the Orchestration tests.
+
+.DESCRIPTION
+Preserve all test associations and source scope while enforcing resource budgets and valid resume
+context. Monitoring must retain partial/torn-write progress, distinguish failures and escape
+dashboard data.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:MutatorTestRoot=Split-Path (Split-Path $PSScriptRoot)
     Import-Module (Join-Path $script:MutatorTestRoot 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking

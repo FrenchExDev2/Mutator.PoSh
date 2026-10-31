@@ -1,4 +1,13 @@
 function Move-MutatorEngineConfiguration {
+    <#
+    .SYNOPSIS
+    Migrate legacy engine sections into dedicated YAML.
+
+    .DESCRIPTION
+    Preserves unrelated source settings and a backup. Validates paths/data before writing under
+    ShouldProcess.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$From,[string]$Path=(Get-MutatorEngineConfigurationPath))
     $source=(Resolve-Path -LiteralPath $From -ErrorAction Stop).ProviderPath

@@ -1,4 +1,13 @@
 function Stop-MutatorGuestBase {
+    <#
+    .SYNOPSIS
+    Stop an owned guest while retaining disks and evidence.
+
+    .DESCRIPTION
+    Rechecks ownership and requests clean stopping. Readiness alone cannot make abnormal shutdown
+    successful.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$Path)
     $stored=Read-MutatorGuestRun $Path;$run=$stored.Run

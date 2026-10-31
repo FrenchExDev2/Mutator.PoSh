@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the TerminalInteractionContracts tests.
+
+.DESCRIPTION
+Once returns structured state without console access; redirected streams refuse interactive mode. Q
+detaches, stop keys signal cooperatively and all exit/error paths restore terminal state.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
     if(!('Mutator.ConsoleFixture' -as [type])){Add-Type -LiteralPath (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'test/Fixtures/TerminalConsoleFixture.cs')}

@@ -1,4 +1,13 @@
 function Test-MutatorPowerShellGate {
+    <#
+    .SYNOPSIS
+    Accept consistent, nonempty, complete raw mutation evidence.
+
+    .DESCRIPTION
+    Requires exact counters, zero survivors/exclusions/skips, valid associations and tool success.
+    Partial reports and rounded scores cannot satisfy it.
+    #>
+
     param([AllowNull()][Collections.IDictionary]$Detail,[AllowNull()][object]$Result)
     if(!$Detail -or !$Result){return $false}
     foreach($field in @('total','killed','survived','mutationScore','declaredEquivalent','skippedAsUncovered','staleEquivalents','filesWithoutTestMapping')){

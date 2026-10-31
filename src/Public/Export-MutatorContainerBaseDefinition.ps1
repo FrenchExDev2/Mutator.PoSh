@@ -1,4 +1,13 @@
 function Export-MutatorContainerBaseDefinition {
+    <#
+    .SYNOPSIS
+    Generate shared pinned runtime and guest seed recipes.
+
+    .DESCRIPTION
+    Uses version/template fingerprints and honors ShouldProcess. Writes definitions without building or
+    booting images.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$ModuleRoot)
     $root=(Resolve-Path -LiteralPath $ModuleRoot -ErrorAction Stop).ProviderPath

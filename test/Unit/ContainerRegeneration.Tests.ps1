@@ -1,7 +1,31 @@
+<#
+.SYNOPSIS
+Expected behavior for the ContainerRegeneration tests.
+
+.DESCRIPTION
+Generate bases before selected modules, preserve existing macOS definitions and report exact changed
+paths. Reject foreign/empty selections and occupied report directories while retaining
+failed-generation evidence.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:RegenerationModule=Split-Path (Split-Path $PSScriptRoot)
     Import-Module (Join-Path $script:RegenerationModule 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
     function New-RegenerationFixture {
+        <#
+        .SYNOPSIS
+        Prepare minimal runtime templates and contributor metadata for regeneration tests.
+
+        .DESCRIPTION
+        Keeps selected/generated files inside the test drive so idempotence, ownership and change reporting
+        can be asserted without a build.
+        #>
+
         param([string]$Root)
         $engine=Join-Path $Root 'FrenchExDev.Mutator.PoSh'
         [void][IO.Directory]::CreateDirectory((Join-Path $engine 'resources/containers/definitions'))

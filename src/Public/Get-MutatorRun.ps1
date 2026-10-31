@@ -1,4 +1,13 @@
 function Get-MutatorRun {
+    <#
+    .SYNOPSIS
+    Aggregate retained run/package observations without execution.
+
+    .DESCRIPTION
+    Distinguishes startup failure, interruption and remote identity. Partial/recheck evidence gains no
+    final score and unknown discovery stays unknown.
+    #>
+
     [CmdletBinding()]
     param([string]$Path, [string]$RunRoot,[ValidateRange(1,10000)][int]$Limit=10000)
     $directories = if ($Path) { @((Resolve-Path -LiteralPath $Path -ErrorAction Stop).ProviderPath) } else {

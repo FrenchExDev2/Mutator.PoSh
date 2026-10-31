@@ -1,4 +1,13 @@
 function Add-MutatorHostPowerShell {
+    <#
+    .SYNOPSIS
+    Add the pinned controller runtime to a VM-host Dockerfile.
+
+    .DESCRIPTION
+    Returns rewritten text with a PowerShell stage and controller fingerprint. Requires an explicit
+    base-image argument; does not build an image.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Pure Dockerfile text factory; does not allocate resources or change the environment.')]
     [CmdletBinding()]
     param([string]$Dockerfile,[Collections.IDictionary]$Definition)

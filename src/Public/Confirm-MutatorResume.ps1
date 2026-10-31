@@ -1,4 +1,13 @@
 function Confirm-MutatorResume {
+    <#
+    .SYNOPSIS
+    Validate a partial report and its execution-context receipt.
+
+    .DESCRIPTION
+    Requires explicit partial mode, no final score, matching context hash and unchanged report bytes.
+    Rejects stale or imported-only evidence.
+    #>
+
     param([string]$Path, [object]$Context)
     if (!(Test-Path -LiteralPath $Path -PathType Leaf) -or !(Test-Path -LiteralPath ($Path + '.context.json') -PathType Leaf)) { throw 'Resume requires the retained partial report and its context receipt.' }
     $report = Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json -AsHashtable

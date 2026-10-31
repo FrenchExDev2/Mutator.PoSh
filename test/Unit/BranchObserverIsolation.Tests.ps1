@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the BranchObserverIsolation tests.
+
+.DESCRIPTION
+Observer namespaces must not alter original source or branch identity. Reject executable identifier
+syntax and preserve an enclosing observer when cloning an instrumented recorder.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'Branch observation is isolated from its recorder test subject' {
     It 'preserves original code and branch identities while using a separate observer' {

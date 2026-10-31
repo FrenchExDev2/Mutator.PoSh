@@ -1,4 +1,13 @@
 function Start-MutatorGuestBase {
+    <#
+    .SYNOPSIS
+    Prepare an owned guest after host/image checks.
+
+    .DESCRIPTION
+    Retains identity and isolated storage, with explicit resume of stopped preparation. Keeps failure
+    evidence and disks.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$ModuleRoot,[Parameter(Mandatory)][string]$Image,[Parameter(Mandatory)][string]$OutputDirectory,[string]$Connection,[string]$ResumeFrom,
         [ValidateRange(2048,65536)][int]$MemoryMiB=6144,[ValidateRange(2048,64512)][int]$GuestMemoryMiB=4096,

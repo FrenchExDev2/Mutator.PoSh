@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the ProductionScope tests.
+
+.DESCRIPTION
+Include manifest entrypoint, root scripts and executable resources while excluding declarative data
+and artifacts. Missing or escaping entrypoints fail before configuration generation.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'Complete production scope' {
     It 'includes executable resources and root scripts while keeping declarative data and test artifacts separate' {

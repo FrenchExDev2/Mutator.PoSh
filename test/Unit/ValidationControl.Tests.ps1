@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the ValidationControl tests.
+
+.DESCRIPTION
+Accept only owner-matched stop signals, wait for every child worker and then export partial proof.
+Copy failures remain secondary and WhatIf must not write stop files.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll { Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking }
 Describe 'Identity-bound validation stop and proof preservation' {
     InModuleScope FrenchExDev.Mutator.PoSh {

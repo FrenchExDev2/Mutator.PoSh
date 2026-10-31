@@ -14,6 +14,14 @@ $ProgressPreference='SilentlyContinue'
 [void][IO.Directory]::CreateDirectory($root)
 $metadata=[pscustomobject]@{Module=$null}
 function Write-BaseProgress {
+    <#
+    .SYNOPSIS
+    Retain the Windows preparation stage locally and mirror it.
+
+    .DESCRIPTION
+    A failed share copy leaves local progress and a verbose diagnostic, preserving the primary outcome.
+    #>
+
     param([string]$Stage)
     $path=Join-Path $root 'base-progress.json'
     [IO.File]::WriteAllText($path,(@{Stage=$Stage;Utc=[datetime]::UtcNow.ToString('O')}|ConvertTo-Json))

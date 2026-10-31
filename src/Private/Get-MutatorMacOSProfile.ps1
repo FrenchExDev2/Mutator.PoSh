@@ -1,4 +1,13 @@
 function Get-MutatorMacOSProfile {
+    <#
+    .SYNOPSIS
+    Resolve an explicit macOS installation and launch profile.
+
+    .DESCRIPTION
+    Uses package plans, constraints and manual-setup requirements. Unknown recipes fail; prepared
+    metadata does not prove qualification.
+    #>
+
     param([string]$Key,[string]$Binary)
     $directory=Join-Path $script:MutatorRoot 'resources/containers/definitions'
     $plans=Import-PowerShellDataFile (Join-Path $directory 'MacOSPlans.psd1')

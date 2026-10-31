@@ -1,4 +1,13 @@
 function Invoke-MutatorPackage {
+    <#
+    .SYNOPSIS
+    Prepare, execute and retain one mutation or recheck package.
+
+    .DESCRIPTION
+    Dispatches required isolation before local execution, validates context identity and enforces full
+    mutation gates. Retains final state and available partial or failure evidence.
+    #>
+
     param([string]$RunDirectory, [string]$Package)
     $run = Read-MutatorJson (Join-Path $RunDirectory 'run.json')
     $script:MutatorIsolationBoundary=$run['IsolationBoundary']
@@ -29,7 +38,7 @@ function Invoke-MutatorPackage {
             if(!$script:MutatorIsolationBoundary){throw 'Recheck execution requires an isolated worker.'}
             if((Get-FileHash -LiteralPath $entry.RecheckFrom).Hash -cne $entry.RecheckSha256){throw 'The selected recheck baseline changed since scheduling.'}
             $state.Phase='Recheck';Write-MutatorJson $statePath $state
-            $checked=Invoke-MutatorRecheckCore -ModulePath $entry.ModulePath -ReportPath $entry.RecheckFrom -SourceRoot $run.SourceRoot -OutputDirectory (Join-Path $artifacts 'recheck') -StopPath $stopPath
+            $checked=Invoke-MutatorRecheckCore -ModulePath $entry.ModulePath -ReportPath $entry.RecheckFrom -SourceRoot $run.SourceRoot -OutputDirectory (Join-Path $artifacts 'recheck') -StopPath $stopPath -ToolCacheRoot $run['ToolCacheRoot']
             $state.Recheck=@{Outcome=$checked.Outcome;Mode='Recheck';Score=$null;FullGateSatisfied=$false;Report='mutation.recheck.json'
                 BaselineSha256=$checked.BaselineSha256;SourceSha256=$checked.SourceSha256;Rechecked=$checked.Rechecked;NowKilled=$checked.NowKilled;Survived=$checked.Survived}
             $state.Outcome=switch($checked.Outcome){'Success'{'Success'};'Interrupted'{'Interrupted'};default{'Failed'}}
@@ -105,6 +114,15 @@ function Invoke-MutatorPackage {
 }
 
 function Invoke-MutatorStrykerCore {
+    <#
+    .SYNOPSIS
+    Run the configured C# gate and retain captured evidence.
+
+    .DESCRIPTION
+    Requires project settings, restores local tools and forwards cancellation. Rejects empty discovery,
+    native failures and undetected or excluded mutants.
+    #>
+
     [CmdletBinding()]
     param([string]$ModulePath, [string]$Artifacts, [int]$Workers,[ValidateSet('Auto','Host')][string]$Runtime='Auto',[string]$StopPath)
     [void][IO.Directory]::CreateDirectory($Artifacts)
@@ -137,6 +155,15 @@ function Invoke-MutatorStrykerCore {
 }
 
 function Invoke-MutatorRunCore {
+    <#
+    .SYNOPSIS
+    Supervise package workers until completion or cooperative stopping.
+
+    .DESCRIPTION
+    Uses shared leases, detects workers exiting without final state and refreshes the dashboard.
+    Computes aggregate outcome after active owned workers finish.
+    #>
+
     param([string]$RunDirectory)
     $path = Join-Path $RunDirectory 'run.json'
     $run = Read-MutatorJson $path

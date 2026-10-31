@@ -1,4 +1,13 @@
 function Import-MutatorTool {
+    <#
+    .SYNOPSIS
+    Load a private compatibility copy of pinned PSMutant 0.6.0.
+
+    .DESCRIPTION
+    Validates patch boundaries, disables TestRegistry/internal Pester parallelism and adds
+    epoch/progress/cancellation support. Preserves installed tools and handles cache races.
+    #>
+
     [CmdletBinding()]
     param([string]$CacheRoot = (Join-Path $script:MutatorRoot '.cache/mutation-tools'), [string]$ProgressPath, [string]$StopPath)
     $installed = Get-Module -ListAvailable PSMutant | Where-Object Version -EQ '0.6.0' | Select-Object -First 1

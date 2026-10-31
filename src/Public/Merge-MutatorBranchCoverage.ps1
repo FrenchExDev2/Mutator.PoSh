@@ -1,4 +1,13 @@
 function Merge-MutatorBranchCoverage {
+    <#
+    .SYNOPSIS
+    Union branch outcomes from compatible source-bound reports.
+
+    .DESCRIPTION
+    Requires identical definitions/fingerprints and successful semantic tests. Rejects fabricated or
+    incompatible proof before writing.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string[]]$Path,[Parameter(Mandatory)][string]$OutputPath)
     if(!$Path.Count){throw 'Branch merge requires reports.'}

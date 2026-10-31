@@ -1,4 +1,13 @@
 function Stop-MutatorRun {
+    <#
+    .SYNOPSIS
+    Stop cooperatively or terminate only owned workers.
+
+    .DESCRIPTION
+    Retains reports and signals owned isolation environments. Force checks identity and stops guests
+    before host workers.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$Path,[switch]$Force)
     $directory=$ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)

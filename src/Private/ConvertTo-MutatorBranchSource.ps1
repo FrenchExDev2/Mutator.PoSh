@@ -1,4 +1,13 @@
 function ConvertTo-MutatorBranchSource {
+    <#
+    .SYNOPSIS
+    Instrument a PowerShell source copy with branch-outcome observations.
+
+    .DESCRIPTION
+    Parses original code, assigns source-position identities and returns rewritten text with branch
+    definitions. Separate observer names prevent recorder collisions.
+    #>
+
     param([Parameter(Mandatory)][string]$Path,[Parameter(Mandatory)][string]$RelativePath,
         [ValidatePattern('^[A-Za-z][A-Za-z0-9]*$')][string]$ObserverNamespace)
     # Separate observation from a recorder that is itself a production test subject.

@@ -1,4 +1,13 @@
 function ConvertTo-MutatorDockerBuildOption {
+    <#
+    .SYNOPSIS
+    Translate supported build arguments into bounded Docker build settings.
+
+    .DESCRIPTION
+    Validates resources, explicit Dockerfile, ignore-file identity and pull policy. Rejects automatic
+    retry requests and incomplete option values.
+    #>
+
     param([string[]]$Arguments)
     $options=[Collections.Generic.List[string]]::new()
     $settings=@{Memory='2048m';MemorySwap='2048m';CpuPeriod='100000';CpuQuota='200000';Jobs=1;File=$null;Ignore=$null;Base=$null;Pull='missing'}
@@ -31,6 +40,15 @@ function ConvertTo-MutatorDockerBuildOption {
 }
 
 function ConvertTo-MutatorDockerMemorySize {
+    <#
+    .SYNOPSIS
+    Convert a validated Docker memory quantity to bytes.
+
+    .DESCRIPTION
+    Accepts positive integers with lowercase k, m or g suffixes and binary multipliers. Invalid syntax
+    throws before building.
+    #>
+
     param([string]$Value)
     if($Value -cnotmatch '^([1-9][0-9]*)([kmg]?)$'){throw 'Invalid Docker memory size.'}
     $units=@{''=1L;k=1KB;m=1MB;g=1GB}
@@ -38,6 +56,15 @@ function ConvertTo-MutatorDockerMemorySize {
 }
 
 function Invoke-MutatorDockerBuildStep {
+    <#
+    .SYNOPSIS
+    Run one Docker build operation and retain its local evidence.
+
+    .DESCRIPTION
+    Writes both streams, arguments and outcome under the proof directory. Returns the captured native
+    result for the caller's decision.
+    #>
+
     param([string]$Name,[string[]]$Arguments,[string]$Directory,[string]$Connection,[int]$TimeoutSeconds,[string]$Proof)
     $prefix=@(Get-MutatorContainerPrefix -Engine Docker -Connection $Connection -Directory $Directory)
     $native=Invoke-MutatorNative docker ($prefix+$Arguments) $Directory $TimeoutSeconds
@@ -48,6 +75,15 @@ function Invoke-MutatorDockerBuildStep {
 }
 
 function Remove-MutatorDockerBuildScratch {
+    <#
+    .SYNOPSIS
+    Remove only the temporary Docker build directory bearing the expected owner.
+
+    .DESCRIPTION
+    Checks its absolute temporary path, owner format and owner receipt before recursive removal.
+    Mismatched paths or identities are refused.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Private finally cleanup checks the exact temporary path and owner; the public build owns ShouldProcess.')]
     [CmdletBinding()]
     param([string]$Path,[string]$Owner)
@@ -58,6 +94,15 @@ function Remove-MutatorDockerBuildScratch {
 }
 
 function Invoke-MutatorDockerBuild {
+    <#
+    .SYNOPSIS
+    Build with an owned BuildKit container and verified resource limits.
+
+    .DESCRIPTION
+    Uses an inspected local base through an OCI context when available and retains step evidence. Cleans
+    up its builder and scratch directory without replaying the build.
+    #>
+
     param([string[]]$Arguments,[string]$Directory,[int]$TimeoutSeconds,[string]$Connection)
     $settings=ConvertTo-MutatorDockerBuildOption $Arguments
     $owner=[guid]::NewGuid().ToString('N');$builder='mutator-build-'+$owner

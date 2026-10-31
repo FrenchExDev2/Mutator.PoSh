@@ -1,4 +1,13 @@
 function Import-MutatorTestModule {
+    <#
+    .SYNOPSIS
+    Load the current mutant and restore safe state between tests.
+
+    .DESCRIPTION
+    Caches only within one epoch and falls back to fresh imports for opaque state, removed modules or
+    changed functions.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidGlobalVars','',Justification='The cache is local to one PSMutant runspace and epoch; explicit cross-module access is required by independent Pester containers.')]
     [CmdletBinding()]
     param([Parameter(Mandatory)][string[]]$Manifest,[string]$ModulePattern)

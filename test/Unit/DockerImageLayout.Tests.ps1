@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the DockerImageLayout tests.
+
+.DESCRIPTION
+Extract only contained regular files and convert exactly one inspected image to an OCI layout.
+Verify configuration/layer identity and reject traversal, links, malformed manifests and
+inconsistent image IDs.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:DockerLayoutModule=Split-Path (Split-Path $PSScriptRoot)
     Import-Module (Join-Path $script:DockerLayoutModule 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking

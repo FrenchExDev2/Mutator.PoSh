@@ -1,4 +1,13 @@
 function Show-MutatorDashboard {
+    <#
+    .SYNOPSIS
+    Generate a bounded localized dashboard from retained runs.
+
+    .DESCRIPTION
+    Escapes embedded data and optionally opens the HTML. Does not start, resume or modify completed
+    campaigns.
+    #>
+
     [CmdletBinding()]
     param([string]$RunRoot,[string]$Path,[switch]$Open,[ValidateRange(1,10000)][int]$MaxRuns=100)
     $root=Get-MutatorRunRoot $RunRoot

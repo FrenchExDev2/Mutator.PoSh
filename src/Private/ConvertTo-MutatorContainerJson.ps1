@@ -1,4 +1,13 @@
 function ConvertTo-MutatorContainerJson {
+    <#
+    .SYNOPSIS
+    Serialize container metadata with canonical key order and LF formatting.
+
+    .DESCRIPTION
+    Recursively sorts mapping keys while preserving array order and data values. Returns JSON text for
+    reproducible cross-platform fingerprints.
+    #>
+
     param([object]$Data)
     $normalize={
         param($Value)

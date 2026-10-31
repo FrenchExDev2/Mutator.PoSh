@@ -1,4 +1,13 @@
 function Export-MutatorGuestBase {
+    <#
+    .SYNOPSIS
+    Export a verified cleanly stopped guest to a new seed.
+
+    .DESCRIPTION
+    Checks fingerprint, readiness and standalone qcow2 headers. Retains hashes and sizes; incomplete
+    exports stay available for diagnosis.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$Container,[Parameter(Mandatory)][string]$ModuleRoot,[string]$Connection,[string]$Destination,[ValidateSet('Windows','MacOS')][string]$Platform='Windows')
     $root=(Resolve-Path -LiteralPath $ModuleRoot -ErrorAction Stop).ProviderPath

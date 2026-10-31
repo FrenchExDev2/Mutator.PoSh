@@ -1,7 +1,30 @@
+<#
+.SYNOPSIS
+Expected behavior for the ContainerDependency tests.
+
+.DESCRIPTION
+Resolve transitive manifest dependencies exactly once without importing code. Include active
+QuietCli dependencies and reject unsafe names, missing modules, foreign roots and linked paths.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:DependencyModules=Split-Path (Split-Path (Split-Path $PSScriptRoot))
     Import-Module (Join-Path $script:DependencyModules 'FrenchExDev.Mutator.PoSh/FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
     function New-DependencyFixture {
+        <#
+        .SYNOPSIS
+        Create a manifest-only dependency contributor that must never be imported.
+
+        .DESCRIPTION
+        Its module body throws deliberately. Successful dependency inventory must read metadata without
+        executing contributor code.
+        #>
+
         param([string]$Root,[string]$Name,[string]$Dependencies='@()',[string]$Required='@()')
         $directory=Join-Path $Root $Name
         [void][IO.Directory]::CreateDirectory($directory)

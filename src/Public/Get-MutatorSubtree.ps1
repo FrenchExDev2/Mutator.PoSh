@@ -1,4 +1,13 @@
 function Get-MutatorSubtree {
+    <#
+    .SYNOPSIS
+    Validate sources/tests against declared sandbox subtrees.
+
+    .DESCRIPTION
+    Requires relative contained existing trees. Rejects escaping paths and associations outside the
+    allowed scope.
+    #>
+
     param([string]$SourceRoot, [Collections.IDictionary]$Configuration)
     $root = [IO.Path]::GetFullPath($SourceRoot)
     $paths = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)

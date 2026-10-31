@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the GitImageValidation tests.
+
+.DESCRIPTION
+Default selection contacts Linux only and uses CliEnvironment-owned builds with frozen dependencies.
+Stops, failed builds, stale proof and source drift remain visible; baseline-only or partial work
+never satisfies the full gate.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeDiscovery {
     $parent=Split-Path (Split-Path (Split-Path $PSScriptRoot))
     Import-Module (Join-Path $parent 'FrenchExDev.CliEnvironment.PoSh/FrenchExDev.CliEnvironment.PoSh.psd1') -Force -DisableNameChecking

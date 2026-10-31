@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the MemoryRecoveryContracts tests.
+
+.DESCRIPTION
+Recheck PID/time/parent ownership before stopping anything and exclude ordinary shells. Restart only
+unfinished packages after all owned workers exit, preserving partial proof and run options.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
     & (Get-Module FrenchExDev.Mutator.PoSh) {. (Join-Path $script:MutatorRoot 'test/Fixtures/WindowsCimContracts.ps1')}

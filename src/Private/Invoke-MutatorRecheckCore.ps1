@@ -1,7 +1,16 @@
 function Invoke-MutatorRecheckCore {
+    <#
+    .SYNOPSIS
+    Re-evaluate survivors inside an already isolated worker.
+
+    .DESCRIPTION
+    Freezes inputs, uses one worker and checks report identity and counters. Retains recheck evidence
+    with no score and FullGateSatisfied false.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$ModulePath,[Parameter(Mandatory)][string]$ReportPath,
-        [Parameter(Mandatory)][string]$OutputDirectory,[string]$SourceRoot,[string]$StopPath)
+        [Parameter(Mandatory)][string]$OutputDirectory,[string]$SourceRoot,[string]$StopPath,[string]$ToolCacheRoot)
     if(!$script:MutatorIsolationBoundary){throw 'Recheck execution requires an isolated worker.'}
     $root=(Resolve-Path -LiteralPath $ModulePath -ErrorAction Stop).ProviderPath
     $baseline=(Resolve-Path -LiteralPath $ReportPath -ErrorAction Stop).ProviderPath
@@ -36,9 +45,12 @@ function Invoke-MutatorRecheckCore {
         # The configuration is intentionally rewritten before recording the immutable run input.
         $sourceBefore=Get-MutatorSourceSnapshot $subject
         Import-Module Pester -RequiredVersion 6.2.0 -ErrorAction Stop
-        $result.Tool=Import-MutatorTool -ProgressPath (Join-Path $output 'mutants.jsonl') -StopPath $StopPath
+        $toolOptions=@{ProgressPath=(Join-Path $output 'mutants.jsonl');StopPath=$StopPath}
+        if($ToolCacheRoot){$toolOptions.CacheRoot=$ToolCacheRoot}
+        $result.Tool=Import-MutatorTool @toolOptions
         Write-MutatorJson $receipt $result
         $run=Invoke-PSMutation -ConfigFile $stagedConfig -SourceRoot $stage -RecheckFrom $baseline -Quiet
+        if($StopPath -and (Test-Path -LiteralPath $StopPath)){throw [OperationCanceledException]::new('Recheck was interrupted before completion.')}
         $full=Join-Path $stage $configuration.reportPath
         $detailPath=Join-Path (Split-Path $full) (([IO.Path]::GetFileNameWithoutExtension($full))+'.recheck.json')
         $detail=Read-MutatorJson $detailPath

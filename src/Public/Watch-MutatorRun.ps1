@@ -1,4 +1,13 @@
 function Watch-MutatorRun {
+    <#
+    .SYNOPSIS
+    Display the terminal view or return one structured snapshot.
+
+    .DESCRIPTION
+    Once avoids console access. Interactive detach/stop restores screen, cursor and key modes even on
+    failure.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingWriteHost','',Justification='Explicit interactive TUI uses Console VT rendering; redirected callers use the structured -Once mode instead.')]
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$Path,[ValidateRange(1,60)][int]$RefreshSeconds=1,[switch]$Once)

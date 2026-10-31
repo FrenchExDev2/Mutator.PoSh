@@ -1,4 +1,13 @@
 function Write-MutatorValidationReport {
+    <#
+    .SYNOPSIS
+    Publish validation JSON, escaped HTML and optional terminal progress.
+
+    .DESCRIPTION
+    Retains separate platform outcomes and unknown progress. HTML refresh is active only while
+    validation is running.
+    #>
+
     param([Collections.IDictionary]$Run,[switch]$UI)
     Write-MutatorJson (Join-Path $Run.Path 'summary.json') $Run
     $rows=foreach($os in @('Linux','Windows','MacOS')){
@@ -36,6 +45,15 @@ function Write-MutatorValidationReport {
 }
 
 function New-MutatorValidationSource {
+    <#
+    .SYNOPSIS
+    Freeze selected modules and declared validation dependencies.
+
+    .DESCRIPTION
+    Checks live/copied fingerprints before retaining proof. Optional recipe regeneration affects only
+    the copy and retains original identities.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Private staging runs inside the public Invoke-MutatorValidation ShouldProcess boundary.')]
     [CmdletBinding()]
     param([string[]]$ModulePath,[string]$OutputDirectory,[switch]$RefreshContainerDefinitions)
@@ -69,6 +87,14 @@ function New-MutatorValidationSource {
 }
 
 function Invoke-MutatorValidationContainerCommand {
+    <#
+    .SYNOPSIS
+    Run validation transport and require native success.
+
+    .DESCRIPTION
+    Turns timeouts and native errors into explicit transport failures with bounded diagnostics.
+    #>
+
     param([string[]]$Arguments,[string]$Directory,[string]$Connection,[int]$TimeoutSeconds=120)
     $r=Invoke-MutatorContainerCommand -Arguments $Arguments -Directory $Directory -Connection $Connection -TimeoutSeconds $TimeoutSeconds
     if($r.Outcome -cne 'Success'){throw ($script:MutatorContainerEngine+' validation operation failed: '+$Arguments[0]+'; '+(ConvertTo-Json -InputObject $r.Failure -Depth 8 -Compress))}

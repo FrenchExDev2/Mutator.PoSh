@@ -1,18 +1,52 @@
 function Get-MutatorConsoleApi {
+    <#
+    .SYNOPSIS
+    Return the console API type used by the terminal.
+
+    .DESCRIPTION
+    Keeps direct console access behind a replaceable boundary for simulated keys and terminal-state
+    tests.
+    #>
+
     [Console]
 }
 
 function Get-MutatorConsoleState {
+    <#
+    .SYNOPSIS
+    Read whether console streams are redirected.
+
+    .DESCRIPTION
+    Returns input/output flags without rendering or changing modes.
+    #>
+
     $consoleApi=Get-MutatorConsoleApi
     @{InputRedirected=$consoleApi::IsInputRedirected;OutputRedirected=$consoleApi::IsOutputRedirected}
 }
 
 function Test-MutatorTerminalInteractive {
+    <#
+    .SYNOPSIS
+    Require both console streams to be interactive.
+
+    .DESCRIPTION
+    Redirected input or output yields false so scripts can select structured monitoring.
+    #>
+
     $consoleState=Get-MutatorConsoleState
     !$consoleState.InputRedirected -and !$consoleState.OutputRedirected
 }
 
 function Format-MutatorTerminalFrame {
+    <#
+    .SYNOPSIS
+    Render a localized frame from retained observations.
+
+    .DESCRIPTION
+    Separates package completion, mutant results and actual/required runtime. Unknown counts and
+    reservations never become completed work or enforced limits.
+    #>
+
     param([object]$Run)
     $done=[int]$Run.ProcessedPackages;$total=[int]$Run.TotalPackages
     $percent=if($total){100*$done/$total}else{0}

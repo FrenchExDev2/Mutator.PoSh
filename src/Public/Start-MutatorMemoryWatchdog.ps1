@@ -1,4 +1,13 @@
 function Start-MutatorMemoryWatchdog {
+    <#
+    .SYNOPSIS
+    Arm an independent Windows host-memory watchdog.
+
+    .DESCRIPTION
+    Validates thresholds/counters, reuses only identical living policy and retains actual identity.
+    Recovery remains limited to owned processes.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([ValidateRange(4,1048576)][double]$LimitGB=50,[ValidateRange(0,100)][double]$HeadroomGB=2,
         [ValidateRange(1,60)][int]$PollSeconds=2,[ValidateRange(0.1,1000)][double]$MinimumProcessGB=1,[string]$Path,[ValidatePattern('^[A-Za-z0-9][A-Za-z0-9_-]*$')][string]$PodmanMachine)

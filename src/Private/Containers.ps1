@@ -1,4 +1,13 @@
 function Invoke-MutatorContainerCommand {
+    <#
+    .SYNOPSIS
+    Execute a captured container-engine operation with the selected connection.
+
+    .DESCRIPTION
+    Routes Docker builds through the bounded BuildKit adapter and normalizes requested JSON output.
+    Returns native outcome and locally retained streams.
+    #>
+
     param([string[]]$Arguments, [string]$Directory, [int]$TimeoutSeconds=60, [string]$Connection,[switch]$DefaultConnection)
     if($DefaultConnection){$Connection=$null}elseif(!$Connection){$Connection=$script:MutatorContainerConnection}
     $prefix=@(Get-MutatorContainerPrefix -Engine $script:MutatorContainerEngine -Connection $Connection -Directory $Directory -DefaultConnection:$DefaultConnection)
@@ -20,6 +29,15 @@ function Invoke-MutatorContainerCommand {
 }
 
 function Get-MutatorRootlessSiblingConnection {
+    <#
+    .SYNOPSIS
+    Find the rootless storage connection paired with a rootful Podman connection.
+
+    .DESCRIPTION
+    Requires an exact discovered sibling. Does not probe Podman when Docker is selected or change the
+    default connection.
+    #>
+
     param([string]$Directory, [string]$Connection)
     if($script:MutatorContainerEngine -eq 'Docker'){return}
     if(!$Connection){
@@ -44,6 +62,15 @@ function Get-MutatorRootlessSiblingConnection {
 }
 
 function Resolve-MutatorContainerConnection {
+    <#
+    .SYNOPSIS
+    Inspect resource controllers for the selected container connection.
+
+    .DESCRIPTION
+    May select an existing rootful Podman sibling when an implicit default lacks memory controls.
+    Explicit connections and configured endpoints remain authoritative.
+    #>
+
     param([string]$Directory, [string]$Connection)
     $result=Invoke-MutatorContainerCommand -Arguments @('info','--format','json') -Directory $Directory -Connection $Connection
     if($result.Outcome -ne 'Success'){throw ('Cannot inspect the selected '+$script:MutatorContainerEngine+' connection.')}
@@ -69,6 +96,15 @@ function Resolve-MutatorContainerConnection {
 }
 
 function Get-MutatorContainerRecipe {
+    <#
+    .SYNOPSIS
+    Resolve the module recipe, generated definition or required runtime descriptor.
+
+    .DESCRIPTION
+    Checks module identity and definition files, then retains fingerprints for scheduling. Required
+    isolation can select a descriptor even when a host binary exists.
+    #>
+
     param([string]$ModulePath,[switch]$Required)
     $local = Join-Path $ModulePath 'test/mutator.container.psd1'
     $path = if (Test-Path -LiteralPath $local) { $local } else { Join-Path $script:MutatorRoot ('resources/containers/' + (Split-Path $ModulePath -Leaf) + '.psd1') }
@@ -107,6 +143,15 @@ function Get-MutatorContainerRecipe {
 }
 
 function Invoke-MutatorContainerPackage {
+    <#
+    .SYNOPSIS
+    Execute one scheduled package in its isolated Linux container.
+
+    .DESCRIPTION
+    Uses an immutable local image, read-only inputs and owned report storage. Retains business outcomes
+    and available reports even when the client or worker fails.
+    #>
+
     param([string]$RunDirectory, [Collections.IDictionary]$Run, [Collections.IDictionary]$Entry,
         [Collections.IDictionary]$State, [string]$StatePath)
     $artifacts = Split-Path $StatePath
@@ -157,8 +202,8 @@ function Invoke-MutatorContainerPackage {
         $resumeMount=@('--mount',('type=bind,source='+(Split-Path $resume)+',target=/mutator/resume,readonly'))
     }
     if($Entry['RecheckFrom']){
-        $baseline=Join-Path $directory 'recheck-input.json'
-        [void][IO.Directory]::CreateDirectory($directory)
+        $baseline=Join-Path $artifacts 'recheck-input/mutation.json'
+        [void][IO.Directory]::CreateDirectory((Split-Path $baseline))
         Copy-Item -LiteralPath $Entry.RecheckFrom -Destination $baseline
         if((Get-FileHash -LiteralPath $baseline).Hash -cne $Entry.RecheckSha256){throw 'The selected recheck baseline changed since scheduling.'}
         $linuxEntry.RecheckFrom='/mutator/recheck-input.json'

@@ -1,6 +1,30 @@
+<#
+.SYNOPSIS
+Expected behavior for the MacOSBootstrapContracts tests.
+
+.DESCRIPTION
+Only verified base/module preparation may publish readiness with matching ownership and payload
+hashes. Mocked commands must preserve arguments/exit behavior; missing shares, invalid versions and
+failed stages retain diagnostics.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:MacDefinitions=Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'resources/containers/definitions/macos'
-    function Write-MacFixtureJson {param($Path,$Value) [void][IO.Directory]::CreateDirectory((Split-Path $Path));[IO.File]::WriteAllText($Path,($Value|ConvertTo-Json -Depth 8))}
+    function Write-MacFixtureJson {
+        <#
+        .SYNOPSIS
+        Publish controlled macOS bootstrap input or readiness evidence.
+
+        .DESCRIPTION
+        Creates only fixture parent directories and writes JSON for ownership, failure and publication
+        assertions.
+        #>
+        param($Path,$Value) [void][IO.Directory]::CreateDirectory((Split-Path $Path));[IO.File]::WriteAllText($Path,($Value|ConvertTo-Json -Depth 8))}
 }
 Describe 'macOS bootstrap contracts run without a macOS guest' {
     BeforeEach {
@@ -19,7 +43,16 @@ Describe 'macOS bootstrap contracts run without a macOS guest' {
         Write-MacFixtureJson (Join-Path $script:MacShare 'image.json') @{Module='Fixture.Mac';MacBaseFingerprint='mac-base'}
         Write-MacFixtureJson (Join-Path $script:MacInstall 'base-ready.json') @{Fingerprint='mac-base';ProvisioningUser='test-user'}
         $script:MacContractModule=New-Module -Name MutatorMacContracts -ScriptBlock {
-            function Invoke-MacOSBootstrapCommand {param($FilePath,$Arguments,$LogPath) throw 'All OS commands must be mocked.'}
+            function Invoke-MacOSBootstrapCommand {
+                <#
+                .SYNOPSIS
+                Declare the macOS bootstrap command boundary that this test must mock.
+
+                .DESCRIPTION
+                Throws unless replaced by the scenario, ensuring preparation assertions cannot invoke real OS
+                installation commands.
+                #>
+                param($FilePath,$Arguments,$LogPath) throw 'All OS commands must be mocked.'}
             Export-ModuleMember -Function @()
         }
         Import-Module $script:MacContractModule -Global -Force
@@ -153,7 +186,16 @@ Describe 'The macOS native boundary retains argv, logs and exit codes' {
         $script:MacNativeModule=New-Module -Name MutatorMacNative -ArgumentList (Join-Path $script:MacDefinitions 'Invoke-MacOSBootstrapCommand.ps1') -ScriptBlock {
             param($Helper)
             . $Helper
-            function Invoke-MacTestExecutable {param([Parameter(ValueFromRemainingArguments)][string[]]$Arguments) $script:ReceivedMacArguments=$Arguments;'native fixture output';if($null -ne $script:FixtureMacExit){$global:LASTEXITCODE=$script:FixtureMacExit}}
+            function Invoke-MacTestExecutable {
+                <#
+                .SYNOPSIS
+                Simulate native output, received arguments and an optional macOS exit code.
+
+                .DESCRIPTION
+                Records literal arguments so tests can verify forwarding and stale-exit reset without invoking an OS
+                installer.
+                #>
+                param([Parameter(ValueFromRemainingArguments)][string[]]$Arguments) $script:ReceivedMacArguments=$Arguments;'native fixture output';if($null -ne $script:FixtureMacExit){$global:LASTEXITCODE=$script:FixtureMacExit}}
             Export-ModuleMember -Function @()
         }
         Import-Module $script:MacNativeModule -Global -Force

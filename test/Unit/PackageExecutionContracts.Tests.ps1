@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the PackageExecutionContracts tests.
+
+.DESCRIPTION
+Every simulated package scenario must retain its correct outcome, phase and evidence. Mutation/C#
+boundaries are mocked; no real campaign is authorized or qualified by these cases.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:ExecutionModuleRoot=Split-Path (Split-Path $PSScriptRoot)
     Import-Module (Join-Path $script:ExecutionModuleRoot 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
@@ -14,7 +28,16 @@ Describe 'Owned package execution retains evidence and enforces the complete gat
         $null=New-MutatorConfiguration -ModulePath $fixture.Path
         InModuleScope FrenchExDev.Mutator.PoSh -Parameters @{Root=$TestDrive;ModulePath=$fixture.Path;Scenario=$Scenario} {
             param($Root,$ModulePath,$Scenario)
-            function Invoke-PSMutation {param($ConfigFile,$SourceRoot,$ResumeFrom,[switch]$Quiet) throw 'Mock required'}
+            function Invoke-PSMutation {
+                <#
+                .SYNOPSIS
+                Declare the mutation-tool boundary that this unit test must mock.
+
+                .DESCRIPTION
+                Throws if the scenario fails to replace it. These tests exercise orchestration and retained evidence
+                without executing real mutants.
+                #>
+                param($ConfigFile,$SourceRoot,$ResumeFrom,[switch]$Quiet) throw 'Mock required'}
             $script:ExecutionScenario=$Scenario
             $script:ExecutionOriginal=$ModulePath
             $name=Split-Path $ModulePath -Leaf

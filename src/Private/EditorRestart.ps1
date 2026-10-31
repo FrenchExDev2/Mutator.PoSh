@@ -1,8 +1,26 @@
 function Get-MutatorUtcNow {
+    <#
+    .SYNOPSIS
+    Return the current UTC instant for lifecycle deadlines.
+
+    .DESCRIPTION
+    Provides a replaceable clock boundary for polling, timeout and recovery tests without waiting for
+    real deadlines.
+    #>
+
     [datetimeoffset]::UtcNow
 }
 
 function Restart-MutatorEditorSession {
+    <#
+    .SYNOPSIS
+    Request a verified Editor Services restart in its original VS Code window.
+
+    .DESCRIPTION
+    Observes automatic recovery before validating parent, window and exact command. Throws if ownership,
+    focus or replacement-process checks fail.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Private recovery action is authorized by the explicit Start-MutatorMemoryWatchdog boundary.')]
     [CmdletBinding()]
     param([Collections.IDictionary]$Previous,[string]$DesktopRuntimeRoot='C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App')

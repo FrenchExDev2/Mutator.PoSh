@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the WindowsBaseRuntime tests.
+
+.DESCRIPTION
+Publish readiness only after exact PowerShell, SDK and tool pin verification. Wrong runtimes, absent
+binaries and ambiguous SDK inputs fail before claiming preparation.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:BaseRuntimeValidator=Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'resources/containers/definitions/guest/Test-WindowsBase.ps1'
     Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking

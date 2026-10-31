@@ -1,4 +1,13 @@
 function Get-MutatorStrykerSummary {
+    <#
+    .SYNOPSIS
+    Count Stryker verdicts without excluding ignored or noncompiling mutants.
+
+    .DESCRIPTION
+    Separates detected/undetected statuses and rejects invalid reports. Unknown verdicts remain
+    undetected; empty scores remain unknown.
+    #>
+
     param([Collections.IDictionary]$Report)
     $counts=@{Killed=0L;Timeout=0L;Survived=0L;NoCoverage=0L;Ignored=0L;CompileError=0L;Unknown=0L}
     if(!$Report -or $Report['files'] -isnot [Collections.IDictionary]){throw 'Stryker discovery was empty or its report was invalid.'}

@@ -1,4 +1,13 @@
 function New-DockerExportFixture {
+    <#
+    .SYNOPSIS
+    Create a small Docker archive with selectable invalid entries.
+
+    .DESCRIPTION
+    Returns the archive and expected image identity for extraction/layout assertions. Fault options
+    exercise rejection without a daemon.
+    #>
+
     param([string]$Root,[int]$Layers=2,[string]$Fault)
     $directory=Join-Path $Root ([guid]::NewGuid().ToString('N'));$payload=Join-Path $directory 'payload'
     [void][IO.Directory]::CreateDirectory($payload)

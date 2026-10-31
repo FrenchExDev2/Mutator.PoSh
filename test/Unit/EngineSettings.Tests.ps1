@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the EngineSettings tests.
+
+.DESCRIPTION
+Resolve explicit selection, retained context, preferences and saved defaults in order. Validate
+endpoints, reject disabled engines and preserve CLI global contexts while resolving managed Podman
+pipes unambiguously.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'Independent engine endpoints and configuration isolation' {
     InModuleScope FrenchExDev.Mutator.PoSh {

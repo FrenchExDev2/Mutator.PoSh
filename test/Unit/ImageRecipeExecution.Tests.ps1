@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the ImageRecipeExecution tests.
+
+.DESCRIPTION
+Execute only a valid reviewed recipe and verify release/artifact hashes before installation. Mocked
+package managers must receive exact pins, arguments and platform paths; incompatible or ambiguous
+assets fail closed.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:RecipeTestPathCommand=Get-Command Test-Path -CommandType Cmdlet
     $script:RecipeInstaller=Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'resources/containers/definitions/bootstrap/Install-ImageTool.ps1'
@@ -39,6 +54,15 @@ if($args[0] -eq 'create-project' -and $env:MUTATOR_FIXTURE_SKIP_ARTISAN -ne '1')
         [IO.File]::SetUnixFileMode($script:RecipeCli,[IO.UnixFileMode]493)
     }
     function Invoke-OfflineImageRecipe {
+        <#
+        .SYNOPSIS
+        Execute a selected installation recipe against mocked installer boundaries.
+
+        .DESCRIPTION
+        Writes controlled platform metadata and dot-sources the installer in the fixture module. No real
+        package installation should escape the mocks.
+        #>
+
         param([object]$Profile,[string]$Platform='Windows')
         @{Module='Fixture.Recipe';Platforms=@{$Platform=$Profile}}|ConvertTo-Json -Depth 8|Set-Content (Join-Path $script:RecipeRoot 'image.json')
         InModuleScope MutatorImageRecipeRuntime -Parameters @{Installer=$script:RecipeInstaller;Destination=$script:RecipeRoot;SelectedPlatform=$Platform} {

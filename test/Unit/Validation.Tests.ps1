@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the Validation tests.
+
+.DESCRIPTION
+Honor selected suites/platforms and configured engines, freeze sources and retain per-platform
+errors. WhatIf starts nothing; partial selections, impossible budgets and blocked preparation never
+imply a complete gate.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:ValidationModuleRoot=Split-Path (Split-Path $PSScriptRoot)
     Import-Module (Join-Path $script:ValidationModuleRoot 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking

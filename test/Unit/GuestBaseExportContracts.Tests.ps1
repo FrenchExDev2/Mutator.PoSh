@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the GuestBaseExportContracts tests.
+
+.DESCRIPTION
+Export only a clean stopped matching guest with valid standalone qcow2 files, byte counts and
+hashes. Preserve occupied seeds and incomplete exports; WhatIf must copy nothing.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:ExportModuleRoot=Split-Path (Split-Path $PSScriptRoot)
     Import-Module (Join-Path $script:ExportModuleRoot 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking

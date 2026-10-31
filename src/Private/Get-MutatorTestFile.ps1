@@ -1,4 +1,13 @@
 function Get-MutatorTestFile {
+    <#
+    .SYNOPSIS
+    Discover semantic test files while pruning artifacts.
+
+    .DESCRIPTION
+    Walks for .Tests.ps1 files, skips Artifacts before descending and refuses linked files or
+    directories.
+    #>
+
     param([Parameter(Mandatory)][string]$ModulePath)
     $pending=[Collections.Generic.Stack[string]]::new()
     $pending.Push((Join-Path $ModulePath 'test'))

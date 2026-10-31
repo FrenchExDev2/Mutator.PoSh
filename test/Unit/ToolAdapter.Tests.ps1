@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the ToolAdapter tests.
+
+.DESCRIPTION
+Patch only verified PSMutant boundaries without changing installed bytes. Concurrent complete
+publication may be reused; incomplete/conflicting layouts, unsafe staging and wrong pins must fail.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'Private pinned PSMutant adapter' {
     BeforeEach {

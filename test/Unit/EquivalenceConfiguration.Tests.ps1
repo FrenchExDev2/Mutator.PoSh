@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the EquivalenceConfiguration tests.
+
+.DESCRIPTION
+Strict mutation configuration must reject equivalence exclusions instead of using them to improve
+the score. Invalid or stale declarations cannot become accepted gate evidence.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:MutatorRoot=Split-Path (Split-Path $PSScriptRoot)
     Import-Module (Join-Path $script:MutatorRoot 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking

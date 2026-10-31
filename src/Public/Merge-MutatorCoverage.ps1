@@ -1,4 +1,13 @@
 function Merge-MutatorCoverage {
+    <#
+    .SYNOPSIS
+    Merge exact command spans and optional branch evidence.
+
+    .DESCRIPTION
+    Requires identical sources and valid test outcomes before unioning observations. Command, line and
+    branch metrics stay separate.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string[]]$Path,[Parameter(Mandatory)][string]$OutputPath,[string]$BranchPath)
     if(!$Path.Count){throw 'Coverage merge requires reports.'}

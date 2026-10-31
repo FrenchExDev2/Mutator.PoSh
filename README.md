@@ -1,50 +1,50 @@
 # FrenchExDev.Mutator.PoSh
 
-Mutator pilote des campagnes de mutation PowerShell et C# sous **PowerShell 7.6+ Core**. Il prépare des copies isolées des projets, vérifie les tests avant mutation, répartit les workers, conserve les preuves et fournit un suivi dans le terminal et dans une page HTML.
+Mutator manages PowerShell and C# mutation campaigns under **PowerShell 7.6+ Core**. It prepares isolated project copies, checks tests before mutation, allocates workers, retains evidence, and provides monitoring in the terminal and on an HTML page.
 
-Il utilise **PSMutant** pour PowerShell et **Stryker.NET** pour les projets C# configurés. Les modules à tester lui fournissent leurs sources, leurs tests et leur configuration de mutation.
+It uses **PSMutant** for PowerShell and **Stryker.NET** for configured C# projects. The modules under test provide their sources, tests, and mutation configuration.
 
-## Prérequis
+## Prerequisites
 
-- PowerShell 7.6 ou supérieur, édition Core.
-- PSMutant **0.6.0** et Pester **6.2.0** pour les mutations PowerShell.
-- Campagnes Windows : Windows Sandbox et son CLI `wsb.exe` sur un hôte Windows, avec PowerShell Core 7.6+ et les outils épinglés installés localement pour préparer la copie privée.
-- Campagnes Linux : Podman et une image Linux locale contenant PowerShell Core 7.6+, Pester 6.2.0 et PSMutant 0.6.0.
-- `powershell-yaml` **0.4.12** pour lire et écrire la configuration YAML des moteurs de conteneurs.
-- Pour C# : le SDK .NET, Stryker.NET et les dépendances attendues par le projet, préparés dans l'environnement d'exécution choisi.
-- Pour les conteneurs : Podman ou Docker et une connexion utilisable. Les builds Docker nécessitent Buildx.
-- Pour les invités Windows : un hôte Linux avec KVM et virtualisation imbriquée, ainsi qu'une image Windows préparée.
+- PowerShell 7.6 or later, Core edition.
+- PSMutant **0.6.0** and Pester **6.2.0** for PowerShell mutations.
+- Windows campaigns: Windows Sandbox and its `wsb.exe` CLI on a Windows host, with PowerShell Core 7.6+ and the pinned tools installed locally to prepare the private copy.
+- Linux campaigns: Podman and a local Linux image containing PowerShell Core 7.6+, Pester 6.2.0, and PSMutant 0.6.0.
+- `powershell-yaml` **0.4.12** to read and write container engine YAML configuration.
+- For C#: the .NET SDK, Stryker.NET, and the dependencies required by the project, prepared in the selected execution environment.
+- For containers: Podman or Docker and a working connection. Docker builds require Buildx.
+- For Windows guests: a Linux host with KVM and nested virtualization, along with a prepared Windows image.
 
-L'import du module et la consultation des rapports ne démarrent ni campagne, ni installation d'outil, ni watchdog.
+Importing the module and viewing reports do not start a campaign, install tools, or start a watchdog.
 
-## Isolation obligatoire de PSMutant
+## Mandatory PSMutant isolation
 
-| OS des mutants | Environnement obligatoire |
+| Mutant OS | Required environment |
 | --- | --- |
-| Windows | Windows Sandbox (Bac à sable Windows) |
-| Linux | Conteneur Podman |
+| Windows | Windows Sandbox |
+| Linux | Podman container |
 
-`-OS Windows` ou `-OS Linux` sélectionne l'OS cible, indépendamment de l'hôte.
-Sans `-OS`, la cible est l'OS de l'hôte. Une campagne Windows nécessite un hôte
-Windows. Aucun mutant de campagne ne doit s'exécuter directement sur l'hôte :
-un environnement absent ou indisponible produit un échec, sans repli.
-Docker et l'ancien invité Windows KVM ne sont pas des environnements de campagne PSMutant.
-Le recheck historique exécutait aussi des mutants sur l'hôte : cette entrée
-est désormais refusée depuis l'hôte, dans l'attente d'un adaptateur de recheck
-isolé. Utiliser une campagne complète isolée pour l'instant.
+`-OS Windows` or `-OS Linux` selects the target OS independently of the host.
+Without `-OS`, the target is the host OS. A Windows campaign requires a Windows
+host. Campaign mutants must never execute directly on the host:
+a missing or unavailable environment causes a failure, with no fallback.
+Docker and the legacy KVM Windows guest are not PSMutant campaign environments.
+Rechecks follow the same rule: `Invoke-MutatorRecheck -OS Windows` uses
+Windows Sandbox, while `-OS Linux` uses Podman. The public entry point never runs
+PSMutant on the host. Without `-OS`, it uses the host OS.
 
-Windows Sandbox reçoit les sources et les outils en lecture seule, prépare une
-copie de travail privée et écrit ses rapports/progrès dans le seul partage
-accessible en écriture. Le réseau et le presse-papiers sont désactivés. Chaque
-package possède son ID de Sandbox ; son arrêt ne vise que cet ID. Le runtime
-PowerShell Core et les outils proviennent de l'hôte, sans téléchargement dans
-l'invité. Cet adaptateur prend en charge PSMutant ; un projet avec Stryker doit
-sélectionner `-SkipStryker` pour cette campagne Windows.
+Windows Sandbox receives read-only sources and tools, prepares a
+private working copy, and writes reports/progress to the only
+writable share. Networking and the clipboard are disabled. Each
+package has its own Sandbox ID; stopping it targets only that ID. The
+PowerShell Core runtime and tools come from the host, with no downloads inside
+the guest. This adapter supports PSMutant; a project using Stryker must
+select `-SkipStryker` for this Windows campaign.
 
-Pour Linux, la recette ou la définition du module reste prioritaire, même si
-le binaire existe sur l'hôte. À défaut de définition, fournir explicitement
-`-ContainerBaseImage` avec une image locale prête à l'emploi ; le lanceur
-utilise son ID immuable et n'effectue aucun pull automatique.
+For Linux, the module recipe or definition takes precedence, even if
+the binary exists on the host. If no definition is available, explicitly supply
+`-ContainerBaseImage` with a ready-to-use local image; the launcher
+uses its immutable ID and performs no automatic pull.
 
 ```powershell
 Invoke-MutatorRun -ModulePath ../MonModule.PoSh -OS Windows -SkipStryker -Background
@@ -52,36 +52,36 @@ Invoke-MutatorRun -ModulePath ../MonModule.PoSh -OS Linux -ContainerEngine Podma
     -ContainerBaseImage localhost/mon-runtime-tests:stable -Background
 ```
 
-Le monitoring distingue l'environnement requis de celui effectivement démarré.
-Un ancien run exécuté sur l'hôte affiche `Host`, même si sa configuration
-mentionne Podman. `Pending (WindowsSandbox)` ou `Pending (Podman)` indique que
-l'environnement requis n'est pas encore démarré.
+Monitoring distinguishes the required environment from the one actually started.
+An older run executed on the host displays `Host`, even if its configuration
+mentions Podman. `Pending (WindowsSandbox)` or `Pending (Podman)` indicates that
+the required environment has not started yet.
 
-Par défaut, les rapports restent dans le logiciel PowerShell testé :
-`<module testé>/test/Artifacts/mutator/<run-id>/packages/<package-id>/`.
-`mutation.json` et son reçu de contexte y sont conservés, ainsi que les journaux
-et les rapports partiels. `-RunRoot` permet de choisir explicitement une autre
-destination ; il est obligatoire pour une sélection de plusieurs modules.
-Dans Windows Sandbox, `C:\MutatorRun` est seulement le chemin invité du partage
-`sandbox-run` de ce package. `C:\MutatorRun\stop.json` est un signal d'arrêt,
-pas un emplacement de rapports sur l'hôte. Les métadonnées du package exposent
-`HostReportDirectory`, `HostExchangeDirectory` et `GuestExchangeDirectory`.
+By default, reports remain in the PowerShell software under test:
+`<module under test>/test/Artifacts/mutator/<run-id>/packages/<package-id>/`.
+`mutation.json` and its context receipt are retained there, along with logs
+and partial reports. `-RunRoot` explicitly selects another
+destination; it is mandatory when selecting multiple modules.
+In Windows Sandbox, `C:\MutatorRun` is only the guest path of this package's
+`sandbox-run` share. `C:\MutatorRun\stop.json` is a stop signal,
+not a report location on the host. Package metadata exposes
+`HostReportDirectory`, `HostExchangeDirectory`, and `GuestExchangeDirectory`.
 
-## Démarrage rapide
+## Quick start
 
-Les exemples suivants partent du répertoire de Mutator. `../MonModule.PoSh` désigne un module voisin à remplacer par le projet à tester.
+The following examples start from the Mutator directory. `../MonModule.PoSh` refers to a neighboring module; replace it with the project to test.
 
 ```powershell
 Import-Module ./FrenchExDev.Mutator.PoSh.psd1 -DisableNameChecking
 
-# À faire une fois pour un module qui possède déjà ses tests.
+# Run once for a module that already has tests.
 New-MutatorConfiguration -ModulePath ../MonModule.PoSh
 
-# Démarrer une campagne explicite dans un terminal interactif.
+# Start an explicit campaign in an interactive terminal.
 mutator -ModulePath ../MonModule.PoSh -UI
 ```
 
-`mutator` est l'alias de `Invoke-MutatorRun`. Sans `-UI` ni `-Background`, la commande attend la fin du run et retourne son état. Pour travailler en arrière-plan :
+`mutator` is the alias for `Invoke-MutatorRun`. Without `-UI` or `-Background`, the command waits for the run to finish and returns its state. To work in the background:
 
 ```powershell
 $run = Invoke-MutatorRun -ModulePath ../MonModule.PoSh `
@@ -91,81 +91,81 @@ Get-MutatorProgress -Path $run.Path
 Get-MutatorFailure -Path $run.Path -MaxItems 20
 ```
 
-Les workers d'arrière-plan sont lancés sans fenêtre interactive. Mutator conserve les journaux natifs localement ; les commandes de suivi permettent de consulter l'avancement et les problèmes sans afficher ces journaux.
+Background workers launch without an interactive window. Mutator retains native logs locally; monitoring commands provide access to progress and issues without displaying those logs.
 
-## Définir le périmètre
+## Define the scope
 
-Chaque module sélectionné doit posséder `test/psmutant.config.json`. Cette configuration déclare les sources, leurs associations de tests, les seuils et les sous-arbres autorisés dans la sandbox.
+Each selected module must have `test/psmutant.config.json`. This configuration declares the sources, their test associations, thresholds, and subtrees allowed in the sandbox.
 
-`New-MutatorConfiguration` recense le module racine déclaré dans le manifeste, les scripts PowerShell à la racine et les fichiers `.ps1` et `.psm1` sous `src` et `resources`. Il associe chaque source à l'ensemble des fichiers de tests découverts et fixe `coveredLinesOnly` à `false`.
+`New-MutatorConfiguration` inventories the root module declared in the manifest, PowerShell scripts at the root, and `.ps1` and `.psm1` files under `src` and `resources`. It associates each source with all discovered test files and sets `coveredLinesOnly` to `false`.
 
 ```powershell
-# Déclarer aussi les modules voisins nécessaires aux tests.
+# Also declare neighboring modules required by the tests.
 New-MutatorConfiguration -ModulePath ../MonModule.PoSh `
     -Dependency MonProjet.Common.PoSh
 
-# Remplacer explicitement une configuration existante.
+# Explicitly replace an existing configuration.
 New-MutatorConfiguration -ModulePath ../MonModule.PoSh `
     -Dependency MonProjet.Common.PoSh -Force
 ```
 
-Les dépendances doivent être déclarées dans `sandboxSubtrees`. Une source ou un test situé hors du périmètre autorisé fait échouer la préparation. La configuration doit être maintenue lors de l'ajout de sources, de tests ou de dépendances.
+Dependencies must be declared in `sandboxSubtrees`. A source or test outside the allowed scope causes preparation to fail. The configuration must be maintained when adding sources, tests, or dependencies.
 
-Un chemin de module sélectionne ce module. Un chemin de racine sélectionne ses modules enfants possédant une configuration de mutation ; `-Include` filtre leurs noms :
+A module path selects that module. A root path selects its child modules that have a mutation configuration; `-Include` filters their names:
 
 ```powershell
 mutator -Path .. -Include 'MonProjet.*.PoSh' -UI -Parallel -RunRoot ./test/Artifacts/mutator
 ```
 
-`-ModulePath` accepte aussi plusieurs modules. Tous doivent se trouver sous la même `SourceRoot`, déduite par défaut du parent du premier module sélectionné.
+`-ModulePath` also accepts multiple modules. They must all be under the same `SourceRoot`, which defaults to the parent of the first selected module.
 
-## Déroulement d'une campagne
+## Campaign lifecycle
 
-Chaque package dispose de son processus et de sa sandbox. Le déroulement comprend la préparation des sources et des outils, la baseline des tests, la découverte des mutants, leur exécution et la conservation des résultats. Lorsqu'une image doit être construite, la phase `Building Container` précède les tests ; un échec de build conserve les logs et la phase en erreur, sans démarrer les tests.
+Each package has its own process and sandbox. The lifecycle includes source and tool preparation, baseline tests, mutant discovery, execution, and result retention. When an image must be built, the `Building Container` phase precedes testing; a build failure retains the logs and failed phase without starting tests.
 
-L'adaptateur PSMutant crée une copie privée de l'outil épinglé et vérifie les points d'adaptation attendus. Il désactive TestRegistry et le parallélisme interne de Pester, puis ajoute la progression et l'arrêt coopératif. L'installation d'origine est conservée.
+The PSMutant adapter creates a private copy of the pinned tool and checks the expected adaptation points. It disables TestRegistry and Pester's internal parallelism, then adds progress reporting and cooperative stopping. The original installation is preserved.
 
-`-TestOrder FocusedFirst`, valeur par défaut, place les tests unitaires proches de la source avant les tests d'intégration. `-TestOrder Configured` conserve l'ordre déclaré. Ces options réordonnent les associations sans retirer de test ni de mutant.
+`-TestOrder FocusedFirst`, the default, places unit tests close to the source before integration tests. `-TestOrder Configured` preserves the declared order. These options reorder associations without removing any test or mutant.
 
-Chaque mutant impose un nouveau chargement du code. Entre les fichiers de tests d'un même mutant, les états de module pris en charge sont restaurés ; un état qui ne peut pas être restauré de façon sûre entraîne un réimport complet.
+Each mutant requires a fresh code load. Between test files for the same mutant, supported module states are restored; a state that cannot be safely restored triggers a full reimport.
 
-Pour les modules qui possèdent `engine/dotnet-tools.json`, Stryker.NET est sélectionné sauf avec `-SkipStryker`. `engine/mutator.json` doit nommer `Project` et `TestProject`, et le SDK dotnet doit être présent sur l'hôte : `-StrykerRuntime` accepte `Auto` et `Host`. Les erreurs de restauration et d'outillage restent des échecs.
+For modules with `engine/dotnet-tools.json`, Stryker.NET is selected unless `-SkipStryker` is supplied. `engine/mutator.json` must name `Project` and `TestProject`, and the dotnet SDK must be present on the host: `-StrykerRuntime` accepts `Auto` and `Host`. Restore and tooling errors remain failures.
 
-## Critères de réussite
+## Success criteria
 
-Le gate de mutation exige une découverte non vide, une baseline verte et **100 % de mutation brute**, sur le périmètre complet.
+The mutation gate requires nonempty discovery, a passing baseline, and **100% raw mutation score** across the full scope.
 
-- Aucun survivant, échantillonnage ou filtrage limité aux lignes couvertes n'est accepté.
-- Les exclusions d'équivalence sont refusées à la génération, au lancement et à la validation finale.
-- Un score arrondi à 100 % avec un survivant reste un échec.
-- Les associations manquantes, outils en erreur et sources modifiées empêchent la validation.
-- Un rapport partiel ne possède pas de score final.
+- No survivors, sampling, or covered-lines-only filtering are accepted.
+- Equivalence exclusions are rejected during generation, launch, and final validation.
+- A score rounded to 100% with a survivor is still a failure.
+- Missing associations, tool errors, and modified sources prevent validation.
+- A partial report has no final score.
 
-Les anciennes déclarations d'équivalence et les anciens rapports ajustés peuvent être conservés comme diagnostics historiques. Ils ne constituent pas une preuve du gate strict. Les rapports Stryker distinguent les mutants ignorés ou non compilables des résultats scorés.
+Legacy equivalence declarations and adjusted reports may be retained as historical diagnostics. They do not constitute evidence of passing the strict gate. Stryker reports distinguish ignored or noncompiling mutants from scored results.
 
-## Parallélisme et budgets
+## Parallelism and budgets
 
 ```powershell
 mutator -Path .. -Include 'MonProjet.*.PoSh' -UI -Parallel -RunRoot ./test/Artifacts/mutator `
     -ThrottleLimit 4 -Workers 2 -WorkerBudget 8 -MemoryBudgetMiB 8192
 ```
 
-| Paramètre | Rôle |
+| Parameter | Purpose |
 | --- | --- |
-| `WorkerBudget` | Nombre maximal de workers de mutation allouables au run. |
-| `ThrottleLimit` | Nombre maximal de packages actifs simultanément. |
-| `Workers` | Nombre de workers demandé par package. |
-| `MemoryBudgetMiB` | Budget mémoire utilisé par le planificateur pour ses réservations. |
-| `Parallel` | Ajuste automatiquement la concurrence des packages si `ThrottleLimit` n'est pas fourni. |
-| `RunRoot` | Racine de stockage des runs et de leur pool de ressources partagé. |
+| `WorkerBudget` | Maximum number of mutation workers allocatable to the run. |
+| `ThrottleLimit` | Maximum number of simultaneously active packages. |
+| `Workers` | Number of workers requested per package. |
+| `MemoryBudgetMiB` | Memory budget used by the scheduler for reservations. |
+| `Parallel` | Automatically adjusts package concurrency when `ThrottleLimit` is not supplied. |
+| `RunRoot` | Storage root for runs and their shared resource pool. |
 
-L'exemple autorise au plus quatre packages de deux workers chacun, dans les limites des ressources disponibles. PSMutant peut répartir ses mutants entre workers ; Pester reste séquentiel à l'intérieur de chacun.
+The example allows up to four packages with two workers each, within available resources. PSMutant can distribute mutants across workers; Pester remains sequential inside each worker.
 
-Les runs d'un même `RunRoot` partagent un pool protégé par verrou. Le premier run en fixe les budgets ; les réservations des workers encore vivants sont prises en compte avant tout nouveau lancement. Des racines distinctes ne partagent pas ce pool.
+Runs sharing a `RunRoot` share a pool protected by a lock. The first run sets its budgets; reservations for workers that are still alive are accounted for before any new launch. Separate roots do not share this pool.
 
-Les réservations du planificateur ne constituent pas un plafond de mémoire physique imposé par le système. Les limites des conteneurs et le watchdog hôte ont des rôles séparés.
+Scheduler reservations are not a physical memory cap enforced by the operating system. Container limits and the host watchdog have separate roles.
 
-## Suivi dans le terminal et le dashboard
+## Terminal and dashboard monitoring
 
 ```powershell
 Watch-MutatorRun -Path $run.Path
@@ -176,59 +176,80 @@ Show-MutatorDashboard -Open
 Get-MutatorRun
 ```
 
-L'interface `-UI` affiche les phases actives, les packages, les workers, les mutants évalués, les survivants, les erreurs et la mémoire. `S` ou `Ctrl+C` demande l'arrêt coopératif ; `Q` détache la vue en laissant le run continuer. `Watch-MutatorRun` rattache ensuite un terminal au run.
+The `-UI` interface displays active phases, packages, workers, evaluated mutants, survivors, errors, and memory. `S` or `Ctrl+C` requests a cooperative stop; `Q` detaches the view while leaving the run active. `Watch-MutatorRun` can then attach a terminal to the run again.
 
-L'interface interactive exige une console avec entrée et sortie non redirigées. Pour un script ou un agent, utiliser `Get-MutatorProgress`, `Get-MutatorFailure` ou `Watch-MutatorRun -Once`.
+The interactive interface requires a console with nonredirected input and output. For scripts or agents, use `Get-MutatorProgress`, `Get-MutatorFailure`, or `Watch-MutatorRun -Once`.
 
-`Get-MutatorFailure` retourne les erreurs d'exécution et les survivants PowerShell/C#, avec leurs fichiers, lignes, opérateurs et rapports. Le résultat est borné à 20 éléments et 8192 octets par défaut. `Truncated` et `NextSkip` indiquent la pagination ; `-MaxItems`, `-MaxOutputBytes` et `-Skip` règlent la lecture.
+`Get-MutatorFailure` returns execution errors and PowerShell/C# survivors, with their files, lines, operators, and reports. Results are bounded to 20 items and 8192 bytes by default. `Truncated` and `NextSkip` indicate pagination; `-MaxItems`, `-MaxOutputBytes`, and `-Skip` control retrieval.
 
-Le dashboard présente l'historique, les filtres de statut, plateforme et module, les détails des runs et les liens vers les preuves. Le superviseur régénère la page pendant l'exécution ; le navigateur la recharge toutes les cinq secondes. Les observations horaires réelles sont conservées dans `hourly.jsonl`.
+The dashboard presents history, status/platform/module filters, run details, and evidence links. The supervisor regenerates the page during execution; the browser reloads it every five seconds. Actual hourly observations are retained in `hourly.jsonl`.
 
-Les pourcentages de mutants portent sur les périmètres déjà découverts. La progression des packages n'est pas une estimation du temps restant. Les dates inconnues et les intervalles sans observation ne sont pas reconstitués.
+Mutant percentages cover scopes already discovered. Package progress is not an estimate of remaining time. Unknown dates and intervals without observations are not reconstructed.
 
-Les catalogues de traduction du terminal, du dashboard et des rapports de validation se trouvent sous `resources/localization/`, avec des textes français et anglais.
+Translation catalogs for the terminal, dashboard, and validation reports are under `resources/localization/`, with French and English text.
 
-## Arrêt et reprise
+## Stop and resume
 
 ```powershell
 Stop-MutatorRun -Path $run.Path
 
-# En dernier recours : terminer les processus identifiés de ce run.
+# As a last resort: terminate the identified processes belonging to this run.
 Stop-MutatorRun -Path $run.Path -Force
 
-# Après l'arrêt, reprendre un seul module du run interrompu.
+# After stopping, resume a single module from the interrupted run.
 $resumed = Resume-MutatorRun -Path $run.Path `
     -ModulePath ../MonModule.PoSh -Background
 ```
 
-L'arrêt coopératif permet à PSMutant d'écrire un rapport partiel avant nettoyage. Un arrêt forcé ou un crash peut empêcher cette dernière écriture ; les preuves déjà conservées restent disponibles.
+A cooperative stop allows PSMutant to write a partial report before cleanup. A forced stop or crash may prevent that final write; evidence already retained remains available.
 
-Le pilote Git conserve les diagnostics d'une inspection de conteneur défaillante. Avant d'arrêter un workload Linux en erreur pendant les mutations, il demande l'arrêt coopératif et attend les rapports. Son conteneur arrêté est conservé pour diagnostic ; seuls les workloads réussis sont supprimés automatiquement. Un OS sélectionné en attente est marqué `Pending`, distinct de `NotSelected`.
+The Git driver retains diagnostics from a failed container inspection. Before stopping a Linux workload that fails during mutation, it requests a cooperative stop and waits for reports. Its stopped container is retained for diagnosis; only successful workloads are removed automatically. A selected OS awaiting execution is marked `Pending`, distinct from `NotSelected`.
 
-Les définitions Git appartiennent à CliEnvironment : utiliser `Export-CliEnvironmentGitDefinition`. Le générateur historique `Export-MutatorContainerDefinition` refuse de les écraser, y compris avec `-Force`. Les autres définitions existantes conservent leur contrat actuel.
+Git definitions belong to CliEnvironment: use `Export-CliEnvironmentGitDefinition`. The legacy `Export-MutatorContainerDefinition` generator refuses to overwrite them, including with `-Force`. Other existing definitions retain their current contract.
 
-Le pilote fige également les sources de CliEnvironment : le code de préparation de l'environnement fait partie des dépendances de la campagne, même s'il n'est pas une cible de mutation Git.
+The driver also freezes CliEnvironment sources: environment preparation code is part of the campaign dependencies, even when it is not a Git mutation target.
 
-Pour les invités Git Windows, Mutator prépare l'arborescence des rapports partagés avant le démarrage. L'invité écrit les fichiers de preuves dans ces répertoires ; ses sources de travail et ses sandboxes restent sur son disque local. Cela évite les créations de répertoires SMB que le pont Windows/WSL peut signaler en erreur après les avoir matérialisées.
+For Git Windows guests, Mutator prepares the shared report directory tree before startup. The guest writes evidence files to these directories; its working sources and sandboxes remain on its local disk. This avoids SMB directory creation operations that the Windows/WSL bridge may report as failures after actually creating the directories.
 
-Sous pression mémoire, la récupération du cache Podman compacte aussi les pages libres lorsque le noyau le permet. Cela permet à WSL de restituer les pages libérées à Windows sans redémarrer la VM ; le reçu indique si la compaction a effectivement été exécutée. Le watchdog peut également compacter une VM dont le cache a déjà été vidé mais qui conserve beaucoup de mémoire disponible.
+Under memory pressure, Podman cache reclamation also compacts free pages when the kernel supports it. This allows WSL to return freed pages to Windows without restarting the VM; the receipt records whether compaction actually ran. The watchdog can also compact a VM whose cache has already been cleared but that still holds a large amount of available memory.
 
-La reprise exige le rapport partiel et son reçu de contexte. Les contenus des sources, tests et dépendances, la configuration effective, le runtime, Pester et l'adaptateur doivent correspondre. Un ancien reçu importé seul ne permet pas une reprise. Aucun run interrompu n'est repris automatiquement à l'import du module ou à l'ouverture du dashboard.
+Resuming requires the partial report and its context receipt. Source, test, and dependency contents, effective configuration, runtime, Pester, and adapter must match. An old receipt imported on its own does not allow resuming. No interrupted run resumes automatically when the module is imported or the dashboard is opened.
 
-## Réévaluer les survivants
+## Recheck survivors
 
 ```powershell
 Invoke-MutatorRecheck -ModulePath ../MonModule.PoSh `
-    -ReportPath ./test/Artifacts/runs/mon-run/packages/p0000/mutation.json
+    -ReportPath ./test/Artifacts/mutator/mon-run/packages/p0000/mutation.json
 ```
 
-Ce contrôle réexécute les survivants enregistrés dans une copie figée, avec les tests courants et un worker. Les sources de production et les opérateurs doivent correspondre au rapport d'origine.
+This check reruns recorded survivors in a frozen copy, using current tests and one worker. Production sources and operators must match the original report.
+The initial report is frozen in a read-only copy and identified by
+SHA-256 before the worker starts. The tool cache and working copy
+remain inside the isolated environment; no host fallback is allowed.
+The recheck uses one worker and supports cooperative stopping.
 
-Il conserve sa provenance, son propre rapport et les compteurs `Rechecked`, `NowKilled` et `Survived`. Il ne modifie pas la baseline et ne produit pas de score global : `FullGateSatisfied` reste `false`. Une campagne complète reste nécessaire pour valider les corrections.
+```powershell
+$run = Invoke-MutatorRecheck -ModulePath ../MonModule.PoSh `
+    -ReportPath ./mon-rapport/mutation.json -OS Windows -Background
+Watch-MutatorRun -Path $run.Path
+```
 
-## Configuration de Podman et Docker
+For Linux, add `-OS Linux -ContainerBaseImage localhost/mon-runtime-tests:stable`
+if the module does not have its own image definition.
+By default, evidence is retained under
+`<module under test>/test/Artifacts/mutator/rechecks/`: `mutation.recheck.json`,
+`recheck.json`, and run metadata. `-OutputDirectory` explicitly selects
+another root. In synchronous mode, `Report`, `Proof`, and `RunPath`
+return host paths; in background mode, monitoring tools display
+`Mode=Recheck` and dedicated counters. Survivors also appear in
+`Get-MutatorFailure`. A recheck cannot be resumed like a full campaign:
+start a new one from its initial survivor report.
 
-Mutator conserve ses réglages dans **`~/.mutator/config.yaml`**. La variable **`MUTATOR_CONFIG_PATH`** permet de choisir un autre fichier. Les sections `docker` et `podman` définissent les endpoints, l'activation et le moteur par défaut :
+It retains its provenance, its own report, and the `Rechecked`, `NowKilled`, and `Survived` counters. It does not modify the baseline or produce an overall score: `FullGateSatisfied` remains `false`. A full campaign is still required to validate fixes.
+
+## Podman and Docker configuration
+
+Mutator stores its settings in **`~/.mutator/config.yaml`**. The **`MUTATOR_CONFIG_PATH`** variable selects another file. The `docker` and `podman` sections define endpoints, enablement, and the default engine:
 
 ```yaml
 docker:
@@ -247,23 +268,23 @@ Set-MutatorEngine -Podman '\\.\pipe\podman-ma-machine' -PodmanEnabled:$true
 Set-MutatorEngine -DefaultEngine Podman
 Get-MutatorEngine -Default
 
-# Choisir le moteur et la connexion pour la session Mutator.
+# Select the engine and connection for the Mutator session.
 Set-MutatorContainerEngine -Engine Docker -Connection mon-contexte-docker
 
-# Ou choisir explicitement le moteur pour un run.
+# Or explicitly select the engine for a run.
 mutator -ModulePath ../MonModule.PoSh `
     -ContainerEngine Podman -ContainerConnection ma-connexion -UI
 ```
 
-Un seul moteur peut avoir `default: true`, et il doit être activé. Sans marqueur explicite, la sélection préfère Podman s'il est activé, puis Docker. Sans moteur activé, elle échoue. Une chaîne vide passée à `-Docker` ou `-Podman` efface l'endpoint concerné ; `-WhatIf` prépare les changements sans les écrire.
+Only one engine may have `default: true`, and it must be enabled. Without an explicit marker, selection prefers Podman if enabled, then Docker. It fails if no engine is enabled. An empty string passed to `-Docker` or `-Podman` clears the corresponding endpoint; `-WhatIf` prepares changes without writing them.
 
-`-ContainerConnection` désigne une connexion Podman ou un contexte Docker. Les appels utilisent `podman --connection` ou `docker --context` sans modifier le contexte global des CLI. Un moteur désactivé est refusé même avec une connexion explicite. La configuration ne démarre aucun service.
+`-ContainerConnection` identifies a Podman connection or Docker context. Calls use `podman --connection` or `docker --context` without changing the CLI's global context. A disabled engine is rejected even with an explicit connection. Configuration does not start any service.
 
-Le moteur et ses réglages sont conservés dans les reçus du run. Le choix du CLI Docker ne prouve pas, à lui seul, l'utilisation d'un daemon Docker distinct : un contexte peut pointer vers une API Podman.
+The engine and its settings are retained in run receipts. Selecting the Docker CLI does not, by itself, prove that a separate Docker daemon is used: a context may point to a Podman API.
 
-## Exécuter les tests dans un conteneur Linux
+## Run tests in a Linux container
 
-Un module peut déclarer une recette dans `test/mutator.container.psd1` :
+A module can declare a recipe in `test/mutator.container.psd1`:
 
 ```powershell
 @{
@@ -274,9 +295,9 @@ Un module peut déclarer une recette dans `test/mutator.container.psd1` :
 }
 ```
 
-`UseWhen = 'Windows'` sélectionne le conteneur sur Windows ; `Missing` le sélectionne lorsque le binaire natif est absent ; `Always` le sélectionne sur tous les hôtes. L'absence d'un binaire ne suffit pas sans une recette ou une définition prise en charge.
+`UseWhen = 'Windows'` selects the container on Windows; `Missing` selects it when the native binary is absent; `Always` selects it on all hosts. A missing binary is not sufficient without a supported recipe or definition.
 
-Les recettes personnalisées exigent une base locale explicite, compatible avec `apk` ou `apt`, contenant PowerShell 7.6+, Pester 6.2.0 et PSMutant 0.6.0. Le parcours C# exige aussi son SDK et ses outils.
+Custom recipes require an explicit local base compatible with `apk` or `apt`, containing PowerShell 7.6+, Pester 6.2.0, and PSMutant 0.6.0. The C# workflow also requires its SDK and tools.
 
 ```powershell
 New-MutatorToolImage -RecipePath ../MonModule.PoSh/test/mutator.container.psd1 `
@@ -287,15 +308,15 @@ mutator -ModulePath ../MonModule.PoSh `
     -ContainerBaseImage localhost/mon-runtime-tests:stable -UI
 ```
 
-`New-MutatorToolImage` prépare l'image sans démarrer une campagne. Le cache dépend du Containerfile et de l'identité complète de la base ; le reçu conserve les empreintes de la recette et des images. Une image construite ne constitue pas, à elle seule, une validation des tests ou des mutations.
+`New-MutatorToolImage` prepares the image without starting a campaign. The cache depends on the Containerfile and the full base identity; the receipt retains recipe and image fingerprints. A built image does not, on its own, validate tests or mutations.
 
-Les sources sont montées en lecture seule et les rapports en écriture. Les tests s'exécutent sans réseau. Les limites CPU et mémoire dépendent des contrôleurs cgroup disponibles ; leur absence apparaît dans `Container.ResourceWarning`, tandis que les réservations du planificateur restent actives.
+Sources are mounted read-only and reports are writable. Tests run without networking. CPU and memory limits depend on available cgroup controllers; their absence appears in `Container.ResourceWarning`, while scheduler reservations remain active.
 
-Avec Podman, Mutator peut sélectionner une connexion sœur rootful lorsque la connexion courante ne permet pas d'appliquer la limite mémoire. Une connexion explicitement fournie désactive cette sélection automatique. Les reçus conservent la connexion et les limites réellement utilisées.
+With Podman, Mutator can select a sibling rootful connection when the current connection cannot enforce the memory limit. An explicitly supplied connection disables this automatic selection. Receipts retain the connection and limits actually used.
 
-## Mutations dans un invité Windows
+## Mutations in a Windows guest
 
-`-WindowsGuestImage` sélectionne une image module Windows déjà préparée. Ce choix prend priorité sur la recette Linux du module :
+`-WindowsGuestImage` selects an already prepared Windows module image. This choice takes precedence over the module's Linux recipe:
 
 ```powershell
 mutator -ModulePath ../MonModule.PoSh `
@@ -304,19 +325,19 @@ mutator -ModulePath ../MonModule.PoSh `
     -WorkerBudget 1 -Workers 1 -SkipStryker -UI
 ```
 
-Le backend utilise `dockurr/windows` : Windows s'exécute dans une VM hébergée par un conteneur Linux. La sélection d'une image préparée ne déclenche ni installation Windows ni reconstruction de cette image.
+The backend uses `dockurr/windows`: Windows runs in a VM hosted by a Linux container. Selecting a prepared image triggers neither Windows installation nor an image rebuild.
 
-Chaque invité réserve 6144 Mio dans le planificateur, applique ce plafond au conteneur et attribue 4096 Mio à Windows, avec deux vCPU. Le nombre de workers PSMutant reste limité à un par invité ; plusieurs packages peuvent recevoir chacun une VM si les budgets le permettent.
+Each guest reserves 6144 MiB in the scheduler, applies that cap to the container, and allocates 4096 MiB to Windows, with two vCPUs. PSMutant workers remain limited to one per guest; multiple packages can each receive a VM if budgets allow.
 
-La baseline, la découverte complète et les mutations s'exécutent dans une sandbox locale à Windows. Les états et rapports sont recopiés vers le partage ; les preuves de l'invité sont conservées sous `windows-reports`. Stryker participe pour les projets C# configurés, sauf avec `-SkipStryker`.
+The baseline, full discovery, and mutations execute in a sandbox local to Windows. States and reports are copied back to the share; guest evidence is retained under `windows-reports`. Stryker participates for configured C# projects unless `-SkipStryker` is supplied.
 
-`-WindowsGuestTimeoutMinutes`, 120 par défaut, inclut le démarrage. `-WindowsGuestJobTimeoutSeconds` ajoute une limite après préparation ; la première échéance atteinte s'applique. Un timeout demande un rapport partiel avant l'arrêt, sans garantir qu'un rapport de mutation existe si la découverte n'a pas commencé. La publication finale et l'arrêt ACPI peuvent prolonger la fermeture.
+`-WindowsGuestTimeoutMinutes`, 120 by default, includes startup. `-WindowsGuestJobTimeoutSeconds` adds a limit after preparation; the first deadline reached applies. A timeout requests a partial report before stopping, without guaranteeing that a mutation report exists if discovery has not started. Final publication and ACPI shutdown may extend the shutdown time.
 
-Les disques et journaux sont conservés. Les commandes `Start-MutatorGuestBase`, `Get-MutatorGuestBase`, `Wait-MutatorGuestBase`, `Stop-MutatorGuestBase`, `Restart-MutatorGuestBase` et `Export-MutatorGuestBase` couvrent le cycle des bases gérées. L'export exige une base vérifiée et arrêtée proprement.
+Disks and logs are retained. The `Start-MutatorGuestBase`, `Get-MutatorGuestBase`, `Wait-MutatorGuestBase`, `Stop-MutatorGuestBase`, `Restart-MutatorGuestBase`, and `Export-MutatorGuestBase` commands cover the lifecycle of managed bases. Export requires a verified base that has been shut down cleanly.
 
-## Validation par suite et système
+## Validation by suite and operating system
 
-Depuis le répertoire de Mutator :
+From the Mutator directory:
 
 ```powershell
 ./Invoke-Validation.ps1 -Test Unit,Integration -OS Linux
@@ -324,41 +345,41 @@ Depuis le répertoire de Mutator :
 ./Invoke-Validation.ps1 -Test Unit,Integration,Mutations `
     -OS Linux,Windows -ContainerConnection ma-connexion-root -UI -Ram 40go
 
-# macOS exige une machine adaptée et une base déjà préparée.
+# macOS requires a suitable machine and an already prepared base.
 ./Invoke-Validation.ps1 -OS MacOS -MacOSConnection ma-connexion-macos
 ```
 
-Le script s'appuie sur `Invoke-MutatorValidation`. Par défaut, il sélectionne Mutator, les trois suites et Linux/Windows. Les paramètres `-Test` et `-OS` acceptent des listes. `-ModulePath` permet de sélectionner d'autres modules voisins de Mutator avec leur configuration complète.
+The script uses `Invoke-MutatorValidation`. By default, it selects Mutator, all three suites, and Linux/Windows. The `-Test` and `-OS` parameters accept lists. `-ModulePath` selects other modules neighboring Mutator with their complete configuration.
 
-Les systèmes sont exécutés successivement ; chaque environnement passe Unit, Integration puis Mutations. Linux exécute PowerShell dans son conteneur ; Windows et macOS l'exécutent dans leur invité. Une base absente, obsolète ou nécessitant une préparation manuelle peut bloquer la validation. macOS reste `NotSelected` s'il n'est pas demandé ; sa prise en charge réelle doit être qualifiée sur une machine adaptée.
+Operating systems run sequentially; each environment runs Unit, Integration, then Mutations. Linux runs PowerShell in its container; Windows and macOS run it in their guest. A missing or outdated base, or one requiring manual preparation, may block validation. macOS remains `NotSelected` unless requested; actual support must be qualified on a suitable machine.
 
-Le budget initial est de 6144 Mio, avec `Workers = 1` et `WorkerBudget = 2`. Le répertoire `-OutputDirectory` doit être neuf ou vide. Les preuves sont conservées sous `test/Artifacts/validation/<run-id>/` : `summary.json`, `index.html`, sources figées, logs et rapports par système, suite et module.
+The initial budget is 6144 MiB, with `Workers = 1` and `WorkerBudget = 2`. The `-OutputDirectory` directory must be new or empty. Evidence is retained under `test/Artifacts/validation/<run-id>/`: `summary.json`, `index.html`, frozen sources, logs, and reports by operating system, suite, and module.
 
-Les gates complets exigent 100 % de couverture des commandes, lignes et branches, ainsi que 100 % de mutation brute. Une sélection partielle ne valide pas le gate complet. Une réussite Linux ne qualifie pas Windows ou macOS ; un build réussi ne prouve pas l'exécution dans le système invité.
+Full gates require 100% command, line, and branch coverage, along with a 100% raw mutation score. A partial selection does not satisfy the full gate. Linux success does not qualify Windows or macOS; a successful build does not prove execution in the guest operating system.
 
-## Pilote Git avec bases réutilisables
+## Git driver with reusable bases
 
-`Invoke-MutatorGitImageValidation` utilise les définitions et bases préparées par `FrenchExDev.CliEnvironment.PoSh`. Il exécute Unit, Integration, couverture complète et PSMutant, avec un worker, Linux puis Windows invité. Les sources montées restent en lecture seule ; les mutations travaillent dans des copies locales. Les empreintes du module et de ses dépendances doivent rester identiques pendant toute la campagne.
+`Invoke-MutatorGitImageValidation` uses definitions and bases prepared by `FrenchExDev.CliEnvironment.PoSh`. It runs Unit, Integration, full coverage, and PSMutant with one worker, first on Linux and then in a Windows guest. Mounted sources remain read-only; mutations work in local copies. Module and dependency fingerprints must remain identical throughout the campaign.
 
-Depuis la racine du workspace :
+From the workspace root:
 
 ```powershell
 Invoke-MutatorGitImageValidation -ModuleRoot ./PoSh/FrenchExDev `
     -OS Linux,Windows -Connection podman-frenchexdev-root -Ram 40go -UI
 
-# Sur un hôte Windows : contrôleur indépendant du terminal appelant.
+# On a Windows host: a controller independent of the calling terminal.
 $run = Invoke-MutatorGitImageValidation -ModuleRoot ./PoSh/FrenchExDev `
     -OS Linux,Windows -Connection podman-frenchexdev-root -Ram 40go -Background
 $run.Path
 ```
 
-Le mode détaché conserve `controller.request.json`, l'identité réelle du processus dans `controller.json` et son résultat dans `controller.result.json`. Le suivi reste disponible dans `summary.json` et `index.html`. Il ne reprend pas une ancienne campagne et n'utilise pas sa réussite partielle comme score final. `-BaselineOnly` omet les mutations et ne satisfait jamais le gate complet.
+Detached mode retains `controller.request.json`, the actual process identity in `controller.json`, and its result in `controller.result.json`. Monitoring remains available in `summary.json` and `index.html`. It does not resume an old campaign or use partial success as a final score. `-BaselineOnly` omits mutations and never satisfies the full gate.
 
-L'exécution Windows utilise une politique `Bypass` limitée au processus PowerShell de l'invité, nécessaire aux modules de développement non signés chargés depuis le partage. La politique d'exécution de l'hôte n'est pas modifiée.
+Windows execution uses a `Bypass` policy limited to the guest PowerShell process, required for unsigned development modules loaded from the share. The host execution policy is not changed.
 
-## Watchdog mémoire de l'hôte Windows
+## Windows host memory watchdog
 
-`mutator ... -Ram 40go` active ou reconfigure un watchdog indépendant, avec un seuil de 40 Go et une marge préventive de 2 Go. `40go` et `40GB` utilisent des unités décimales ; `40GiB` et `40Gio` utilisent des unités binaires. Sans `-Ram`, un run ne modifie pas le watchdog existant.
+`mutator ... -Ram 40go` enables or reconfigures an independent watchdog, with a 40 GB threshold and 2 GB of preventive headroom. `40go` and `40GB` use decimal units; `40GiB` and `40Gio` use binary units. Without `-Ram`, a run does not change the existing watchdog.
 
 ```powershell
 Start-MutatorMemoryWatchdog -LimitGB 50 -HeadroomGB 2 -PollSeconds 2
@@ -366,68 +387,70 @@ Get-MutatorMemoryWatchdog
 Stop-MutatorMemoryWatchdog
 ```
 
-Le seuil porte sur la RAM physique totale utilisée du poste, tous logiciels compris. Le watchdog fonctionne dans un processus caché et indépendant. Il intervient uniquement sur les workers et superviseurs Mutator enregistrés : chemin du script, répertoire de run, PID et heure de création doivent correspondre. Les sessions PowerShell et les éditeurs extérieurs à ces runs sont exclus.
+The threshold applies to total physical RAM used on the workstation, across all software. The watchdog runs in a hidden, independent process. It acts only on registered Mutator workers and supervisors: script path, run directory, PID, and creation time must match. PowerShell sessions and editors outside these runs are excluded.
 
-Pour un worker Mutator identifié, il demande d'abord l'arrêt avec conservation des preuves. Un verrou exclusif empêche deux récupérations concurrentes ; tous les processus possédés doivent être arrêtés avant une relance. Les packages non terminés peuvent ensuite redémarrer dans de nouveaux runs : reprise avec contexte valide, ou exécution complète si aucun rapport partiel exploitable n'existe. Les paramètres de workers, de moteur et de délais sont conservés. Les packages déjà réussis ne sont pas relancés.
+For an identified Mutator worker, it first requests a stop with evidence retention. An exclusive lock prevents concurrent recovery operations; all owned processes must stop before a restart. Unfinished packages can then restart in new runs: resume with valid context, or run in full if no usable partial report exists. Worker, engine, and timeout parameters are preserved. Packages that have already succeeded are not rerun.
 
-`-PodmanMachine` permet aussi la récupération du cache Linux propre d'une machine Podman identifiée. Les interventions et mesures restent sous `test/Artifacts/memory-watchdog`. Le watchdog reste actif jusqu'à son arrêt explicite ou la fermeture de session Windows ; il n'est pas installé au démarrage du poste. Son échantillonnage ne constitue pas un plafond matériel garanti.
+`-PodmanMachine` also enables reclamation of clean Linux cache from an identified Podman machine. Interventions and measurements remain under `test/Artifacts/memory-watchdog`. The watchdog remains active until explicitly stopped or the Windows session ends; it is not installed to run at workstation startup. Its sampling does not provide a guaranteed hardware cap.
 
-## Rapports et intégration
+## Reports and integration
 
-| Emplacement par défaut | Contenu |
+| Default location | Contents |
 | --- | --- |
-| `src/` et `resources/` | Code du module, adaptateurs, templates et catalogues. |
-| `test/Artifacts/runs/<run-id>/` | Plan `run.json`, états des packages, événements, rapports et reçus. |
-| `test/Artifacts/validation/<run-id>/` | Synthèse et preuves des validations par système. |
-| `test/Artifacts/rechecks/` | Réévaluations ciblées des survivants. |
-| `.cache/mutation-tools/` | Copies privées des outils adaptés. |
+| `src/` and `resources/` | Module code, adapters, templates, and catalogs. |
+| `test/Artifacts/mutator/<run-id>/` | `run.json` plan, package states, events, reports, and receipts. |
+| `test/Artifacts/validation/<run-id>/` | Summary and evidence of validation by operating system. |
+| `test/Artifacts/mutator/rechecks/` | Targeted survivor rechecks. |
+| `.cache/mutation-tools/` | Private copies of adapted tools. |
 
-`-RunRoot` permet de déplacer le stockage des campagnes. Les états, rapports complets et partiels conservent leur provenance ; une erreur, une interruption et un résultat incomplet ne deviennent pas des réussites lors de leur consultation.
+`-RunRoot` relocates campaign storage. States and full/partial reports retain their provenance; an error, interruption, or incomplete result does not become a success when viewed.
 
 ```powershell
 Export-MutatorReport -Path $run.Path -RunId validation-locale
 ```
 
-Cette commande copie les preuves dans le répertoire d'artefacts de chaque module testé, avec les rapports de mutation, une synthèse et un reçu comparant les empreintes des sources. `Import-MutatorRun` référence des reçus anciens dans le dashboard sans exécuter de mutation. Un reçu importé ne fournit pas à lui seul le contexte nécessaire à une reprise.
+This command copies evidence to each tested module's artifact directory, with mutation reports, a summary, and a receipt comparing source fingerprints. `Import-MutatorRun` references old receipts in the dashboard without executing mutations. An imported receipt does not, on its own, provide the context required to resume.
 
-La consultation du dashboard est bornée à 100 runs par défaut (`-MaxRuns`). Elle ne modifie pas l'historique des runs terminés. Une erreur de rendu est conservée dans `dashboard-error.json` et n'interrompt pas la supervision.
+Dashboard viewing is bounded to 100 runs by default (`-MaxRuns`). It does not modify the history of completed runs. A rendering error is retained in `dashboard-error.json` and does not interrupt supervision.
 
-La rétention est explicite et désactivée par défaut :
+Retention is explicit and disabled by default:
 
 ```powershell
 Get-MutatorRetentionPlan -RunRoot ./test/Artifacts/runs -KeepLast 20
 Remove-MutatorRun -RunRoot ./test/Artifacts/runs -KeepLast 20 -WhatIf
 ```
 
-Seuls les anciens runs natifs réussis sont candidats après le délai de 30 jours par défaut. Les runs incomplets, importés, actifs ou liés sont conservés. `Remove-MutatorRun` redemande confirmation et contrôle les chemins et l'éligibilité au moment de supprimer ; aucune purge n'est déclenchée par l'import, les tests ou le dashboard.
+Only old, successful native runs are candidates after the default 30-day delay. Incomplete, imported, active, or linked runs are retained. `Remove-MutatorRun` requests confirmation again and checks paths and eligibility at deletion time; importing, testing, or viewing the dashboard never triggers a purge.
 
-## Vérifier Mutator
+## Verify Mutator
+
+See [test/README.md](test/README.md) for prerequisites, expected behavior by suite, retained evidence and the limits of each validation result.
 
 ```powershell
-# Tests unitaires du module.
+# Module unit tests.
 ./test/Invoke-Tests.ps1
 
-# Tests d'intégration, avec de petits projets isolés.
+# Integration tests using small isolated projects.
 ./test/Invoke-Tests.ps1 -Path ./test/Integration
 
-# Couverture du périmètre de production de Mutator.
+# Coverage of Mutator's production scope.
 ./test/Invoke-Tests.ps1 -CoverageModulePath .
 ```
 
-Les tests d'intégration peuvent exécuter PSMutant sur de petites fixtures réelles. Les rapports de développement sont conservés sous `test/Artifacts/development/`.
+Integration tests may run PSMutant on small real fixtures. Development reports are retained under `test/Artifacts/development/`.
 
-Le harnais de couverture conserve `tests.xml`, `sources.json`, `coverage.xml` et `coverage.json`. Pester 6.2 fournit la couverture des commandes, mais ne mesure pas les branches. Le rapport signale cette limite avec `MissingMetrics = ['BranchCoverage']` et `FullGateSatisfied = false` ; des compteurs XML à zéro ne prouvent pas une couverture complète des branches.
+The coverage harness retains `tests.xml`, `sources.json`, `coverage.xml`, and `coverage.json`. Pester 6.2 provides command coverage but does not measure branches. The report flags this limitation with `MissingMetrics = ['BranchCoverage']` and `FullGateSatisfied = false`; zero-valued XML counters do not prove full branch coverage.
 
-Mutator conserve les résultats et les diagnostics. Les corrections des sources et des tests restent une action explicite de leur auteur.
+Mutator retains results and diagnostics. Fixing sources and tests remains an explicit action by their author.
 
-## Validation Git : arrêt et preuves
+## Git validation: stopping and evidence
 
-Le pilote choisit désormais Linux par défaut. Les travaux de qualification en cours sont exécutés dans un conteneur Linux avec --init ; aucun invité Windows ne doit être lancé avant clôture de la matrice Linux applicable.
+The driver now selects Linux by default. Ongoing qualification work runs in a Linux container with --init; no Windows guest should be launched until the applicable Linux matrix is complete.
 
-`Invoke-MutatorGitImageValidation` vérifie d'abord la configuration de mutation du module `FrenchExDev.QuietCli.Git.PoSh`. En son absence, il échoue avant de créer une validation ou un watchdog. Les tests actuels sous `dev/` et les images CliEnvironment nécessitent encore une qualification distincte ; ce pilote ne constitue pas une validation de Git.
+`Invoke-MutatorGitImageValidation` first checks the mutation configuration of the `FrenchExDev.QuietCli.Git.PoSh` module. If it is missing, the command fails before creating a validation or watchdog. Current tests under `dev/` and CliEnvironment images still require separate qualification; this driver does not constitute Git validation.
 
-`Stop-MutatorGitImageValidation -Path <validation>` demande un arrêt coopératif, lié à l'identité du run. Le contrôleur transmet le signal au workload. Les enfants Pester silencieux reçoivent aussi ce signal via QuietCli. Pour une mutation, le workload demande l'arrêt du run enfant, attend sa terminaison puis conserve ses preuves ; un état final ne suffit pas si un worker possédé reste vivant.
+`Stop-MutatorGitImageValidation -Path <validation>` requests a cooperative stop tied to the run's identity. The controller forwards the signal to the workload. Silent Pester child processes also receive this signal through QuietCli. For a mutation, the workload requests that the child run stop, waits for it to terminate, then retains its evidence; a final state is not sufficient if an owned worker is still alive.
 
-Une erreur de copie reste l'erreur principale même si l'arrêt ou la copie finale échoue également. La copie du miroir et les écritures JSON partagent le remplacement atomique borné : seul le même fichier temporaire terminé est retenté, jamais une commande de tests ou une campagne. L'ancienne destination reste conservée et le temporaire est nettoyé. Les lecteurs de progression autorisent le remplacement du fichier ouvert.
+A copy error remains the primary error even if stopping or the final copy also fails. Mirror copying and JSON writes share bounded atomic replacement: only the same completed temporary file is retried, never a test command or campaign. The previous destination is preserved and the temporary file is cleaned up. Progress readers allow replacement of the open file.
 
-Un workload Git non réussi conserve sa sandbox et écrit retained-sandbox.json. Un arrêt ou un rapport partiel ne possède pas de score final de mutation. Les seules sandboxes supprimées automatiquement par ce wrapper sont celles dont la validation a réussi.
+An unsuccessful Git workload retains its sandbox and writes retained-sandbox.json. A stopped run or partial report has no final mutation score. The only sandboxes automatically deleted by this wrapper are those whose validation succeeded.

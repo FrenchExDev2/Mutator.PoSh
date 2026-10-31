@@ -1,4 +1,13 @@
 function Save-MutatorArtifact {
+    <#
+    .SYNOPSIS
+    Retain staged reports with hash-bound context receipts.
+
+    .DESCRIPTION
+    Copies available mutation JSON and records execution-context/report hashes. Missing report
+    directories produce no evidence.
+    #>
+
     param([string]$StageReportDirectory, [string]$Artifacts, [object]$Context)
     if (!(Test-Path -LiteralPath $StageReportDirectory)) { return }
     foreach ($file in Get-ChildItem -LiteralPath $StageReportDirectory -File -Filter 'mutation*.json') {

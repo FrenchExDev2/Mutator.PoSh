@@ -1,4 +1,13 @@
 function Copy-MutatorStateValue {
+    <#
+    .SYNOPSIS
+    Clone supported mutable module state for reuse between test files.
+
+    .DESCRIPTION
+    Preserves immutable values and collection comparers. Rejects closures, opaque types, cycles and
+    excessive depth so callers can use fresh imports.
+    #>
+
     param([AllowNull()][object]$Value, [int]$Depth = 0)
     if ($Depth -gt 24) { throw 'State graph is cyclic or too deep for import reuse.' }
     if ($null -eq $Value -or $Value -is [string] -or $Value.GetType().IsValueType -or

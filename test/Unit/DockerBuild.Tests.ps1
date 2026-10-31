@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the DockerBuild tests.
+
+.DESCRIPTION
+Bounded BuildKit uses verified local OCI bases, explicit resource limits and retained step evidence.
+Reject unsupported options/unverified stages; failed builds remain failed after owned cleanup.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:DockerBuildModuleRoot=Split-Path (Split-Path $PSScriptRoot)
     Import-Module (Join-Path $script:DockerBuildModuleRoot 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking

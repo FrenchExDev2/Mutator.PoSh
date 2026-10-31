@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the AtomicFileBudget tests.
+
+.DESCRIPTION
+Persistent file locks must exhaust a bounded budget without changing retained bytes. Released locks
+permit a complete read; replacement follows the host's actual sharing semantics.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'Bounded local JSON sharing recovery' {
     It 'exhausts a persistent read lock within the local retry budget and preserves the retained bytes' {

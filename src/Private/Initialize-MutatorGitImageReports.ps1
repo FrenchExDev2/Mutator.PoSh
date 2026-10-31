@@ -1,4 +1,13 @@
 function Initialize-MutatorGitImageReports {
+    <#
+    .SYNOPSIS
+    Create the shared Git report layout before guest execution.
+
+    .DESCRIPTION
+    Prepares unit, integration and coverage paths, plus mutation paths unless baseline-only. Avoids
+    guest SMB directory-creation failures.
+    #>
+
     [CmdletBinding()]
     param([Parameter(Mandatory)][ValidateNotNullOrEmpty()][string]$Path,[switch]$BaselineOnly)
     # The host owns the shared report layout. Guest SMB creates can materialize

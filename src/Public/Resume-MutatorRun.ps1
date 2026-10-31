@@ -1,4 +1,13 @@
 function Resume-MutatorRun {
+    <#
+    .SYNOPSIS
+    Start from one retained partial package with matching context.
+
+    .DESCRIPTION
+    Rejects imports and rechecks, preserves isolation/resources and delegates full fingerprint
+    validation to the run pipeline.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$Path,[Parameter(Mandatory)][string]$ModulePath,[string]$RunRoot,[switch]$Background)
     $previous=Get-MutatorRun -Path $Path

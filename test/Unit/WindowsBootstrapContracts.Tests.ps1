@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the WindowsBootstrapContracts tests.
+
+.DESCRIPTION
+Bootstrap must preserve verified ownership, runtime paths and payload hashes before publishing
+readiness or registering mocked tasks. Each failed stage retains local/shared diagnostics and cannot
+be overridden by obsolete proof.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:GuestDefinitions=Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'resources/containers/definitions/guest'
     $script:BaseInstaller=Join-Path $script:GuestDefinitions 'Install-WindowsBase.ps1'
@@ -9,17 +24,43 @@ BeforeAll {
     [IO.Compression.ZipFile]::CreateFromDirectory($content,$script:BaseArchive)
     $script:BaseArchiveSha=(Get-FileHash $script:BaseArchive).Hash
     function Save-GuestFixtureJson {
+        <#
+        .SYNOPSIS
+        Write controlled Windows bootstrap metadata or proof.
+
+        .DESCRIPTION
+        Creates fixture parent directories and serializes test data without preparing a real guest.
+        #>
+
         param([string]$Path,[object]$Data)
         [void][IO.Directory]::CreateDirectory((Split-Path $Path))
         [IO.File]::WriteAllText($Path,($Data|ConvertTo-Json -Depth 8))
     }
     function Invoke-BaseBootstrapFixture {
+        <#
+        .SYNOPSIS
+        Execute the base bootstrap inside its mocked fixture module.
+
+        .DESCRIPTION
+        Uses controlled installer options to test readiness, failure retention and task-registration
+        arguments without provisioning Windows.
+        #>
+
         InModuleScope MutatorGuestBootstrapContracts -Parameters @{Installer=$script:BaseInstaller;Options=$script:BaseOptions} {
             param($Installer,$Options)
             . $Installer @Options
         }
     }
     function Invoke-ModuleBootstrapFixture {
+        <#
+        .SYNOPSIS
+        Execute module bootstrap inside its mocked fixture module.
+
+        .DESCRIPTION
+        Uses controlled payloads and native mocks to verify ownership, reinstall decisions and local/shared
+        failure evidence.
+        #>
+
         InModuleScope MutatorGuestBootstrapContracts -Parameters @{Installer=$script:ModuleInstaller;Options=$script:ModuleOptions} {
             param($Installer,$Options)
             . $Installer @Options
@@ -61,11 +102,55 @@ if(!$env:MUTATOR_BASE_MISSING_PROOF){[IO.File]::WriteAllText((Join-Path $Root 'b
 '@)
         $script:BaseOptions=@{Root=$script:GuestRoot;Source=$script:GuestSource;Share=$script:GuestShare;PowerShellDirectory=(Join-Path $script:GuestCase 'runtime');PowerShellExecutable=$script:HostPowerShell;ValidationScript=$verification;EnvironmentTarget='Process'}
         $script:GuestTestModule=New-Module -Name MutatorGuestBootstrapContracts -ScriptBlock {
-            function New-ScheduledTaskAction {param($Execute,$Argument) throw 'Scheduled task commands must be mocked.'}
-            function New-ScheduledTaskTrigger {param([switch]$AtStartup) throw 'Scheduled task commands must be mocked.'}
-            function New-ScheduledTaskPrincipal {param($UserId,$LogonType,$RunLevel) throw 'Scheduled task commands must be mocked.'}
-            function New-ScheduledTaskSettingsSet {param([switch]$StartWhenAvailable,$MultipleInstances,$ExecutionTimeLimit) throw 'Scheduled task commands must be mocked.'}
-            function Register-ScheduledTask {param($TaskName,$Action,$Trigger,$Principal,$Settings,[switch]$Force) throw 'Scheduled task commands must be mocked.'}
+            function New-ScheduledTaskAction {
+                <#
+                .SYNOPSIS
+                Declare a scheduled-task action boundary that must be mocked.
+
+                .DESCRIPTION
+                Throws if reached without a mock, preventing bootstrap unit tests from creating real scheduled
+                tasks.
+                #>
+                param($Execute,$Argument) throw 'Scheduled task commands must be mocked.'}
+            function New-ScheduledTaskTrigger {
+                <#
+                .SYNOPSIS
+                Declare a scheduled-task trigger boundary that must be mocked.
+
+                .DESCRIPTION
+                Throws if reached without a mock, keeping startup behavior an asserted contract rather than a host
+                change.
+                #>
+                param([switch]$AtStartup) throw 'Scheduled task commands must be mocked.'}
+            function New-ScheduledTaskPrincipal {
+                <#
+                .SYNOPSIS
+                Declare a scheduled-task principal boundary that must be mocked.
+
+                .DESCRIPTION
+                Throws unless replaced by the test, so account and privilege choices are inspected without host
+                configuration.
+                #>
+                param($UserId,$LogonType,$RunLevel) throw 'Scheduled task commands must be mocked.'}
+            function New-ScheduledTaskSettingsSet {
+                <#
+                .SYNOPSIS
+                Declare a scheduled-task settings boundary that must be mocked.
+
+                .DESCRIPTION
+                Throws unless replaced by the test, keeping task policy verification independent of the host
+                scheduler.
+                #>
+                param([switch]$StartWhenAvailable,$MultipleInstances,$ExecutionTimeLimit) throw 'Scheduled task commands must be mocked.'}
+            function Register-ScheduledTask {
+                <#
+                .SYNOPSIS
+                Declare scheduled-task registration as an explicit mock boundary.
+
+                .DESCRIPTION
+                Throws unless mocked; the fixture must never persist a real task on the developer workstation.
+                #>
+                param($TaskName,$Action,$Trigger,$Principal,$Settings,[switch]$Force) throw 'Scheduled task commands must be mocked.'}
             Export-ModuleMember -Function @()
         }
         Import-Module $script:GuestTestModule -Global -Force

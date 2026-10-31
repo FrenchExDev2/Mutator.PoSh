@@ -4,6 +4,15 @@ $ErrorActionPreference='Stop'
 if(!$IsLinux){throw 'This qualification requires the generated Linux Npm image.'}
 $module=Import-Module (Join-Path $ModuleRoot 'FrenchExDev.Mutator.PoSh/FrenchExDev.Mutator.PoSh.psd1') -DisableNameChecking -PassThru
 function Invoke-NodeImageCommand {
+    <#
+    .SYNOPSIS
+    Run a Node image qualification command and require complete captured output.
+
+    .DESCRIPTION
+    Throws for native failure or truncation and returns stdout only after those checks. Used by the
+    explicitly invoked image fixture.
+    #>
+
     param([string]$Command,[string[]]$Arguments,[string]$WorkingDirectory='/tmp')
     $result=& $module {param($Command,$Arguments,$Directory) Invoke-MutatorNative $Command $Arguments $Directory 120} $Command $Arguments $WorkingDirectory
     if($result.Outcome -ne 'Success'){throw ('Node image qualification command failed: '+$Command+'; '+$result.Outcome)}

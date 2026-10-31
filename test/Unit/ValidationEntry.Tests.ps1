@@ -1,7 +1,31 @@
+<#
+.SYNOPSIS
+Expected behavior for the ValidationEntry tests.
+
+.DESCRIPTION
+The thin script forwards selections and typed budgets and returns structured JSON plus exit zero
+only for success. Failed gates and orchestration exceptions return exit one with retained
+diagnostics.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:EntryModuleRoot=Split-Path (Split-Path $PSScriptRoot)
     Import-Module (Join-Path $script:EntryModuleRoot 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
     function Invoke-ValidationEntryFixture {
+        <#
+        .SYNOPSIS
+        Run the validation entry script against a controlled stub module.
+
+        .DESCRIPTION
+        Retains forwarded parameters, JSON, stderr and exit code so script contracts can be asserted without
+        running platform validation.
+        #>
+
         param([string]$Mode='Success',[switch]$Explicit)
         $root=Join-Path $TestDrive ([guid]::NewGuid().ToString('N'))
         $null=New-Item $root -ItemType Directory

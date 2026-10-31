@@ -1,4 +1,13 @@
 function Get-MutatorContainerDependency {
+    <#
+    .SYNOPSIS
+    Resolve transitive module dependencies required by an image.
+
+    .DESCRIPTION
+    Reads manifests and metadata without importing target code. Validates paths and emits each required
+    module once.
+    #>
+
     param([Parameter(Mandatory)][string]$ModulePath)
     $root=(Resolve-Path -LiteralPath $ModulePath -ErrorAction Stop).ProviderPath
     $parent=Get-MutatorModuleRoot $root

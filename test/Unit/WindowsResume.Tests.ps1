@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the WindowsResume tests.
+
+.DESCRIPTION
+Resume only with unchanged exact dependency hashes, report bytes and guest context. Reject
+duplicates/drift before allocation and preserve target runtime and Stryker selection.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'Windows resume retains complete source and report evidence' {
     BeforeEach {

@@ -1,6 +1,29 @@
+<#
+.SYNOPSIS
+Expected behavior for the CoverageMerge tests.
+
+.DESCRIPTION
+Union exact command spans and branch outcomes only for identical sources and valid semantic passes.
+Reject drift, incompatible metadata, incomplete proof and fabricated counters.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
     function New-CoverageFixture($Root,$Platform,$Hits) {
+        <#
+        .SYNOPSIS
+        Build exact command spans and selected coverage hits for merge tests.
+
+        .DESCRIPTION
+        Uses controlled source fingerprints and test outcomes to distinguish a valid union from incompatible
+        or fabricated proof.
+        #>
+
         $rows=@(1..3|ForEach-Object {@{File=$Root+'/src/Value.ps1';Line=$_;EndLine=$_;StartColumn=1;EndColumn=5;Function='Get-Value';Class=''}})
         @{Metric='Commands';Backend='Breakpoints';Platform=$Platform;ModulePath=$Root;Runtime='7.6.7';SourcesUnchanged=$true
             Tests=@{Passed=1;Failed=0;Skipped=0;DiscoveryErrors=0};Analyzed=3;Executed=@($Hits).Count;Missed=(3-@($Hits).Count)

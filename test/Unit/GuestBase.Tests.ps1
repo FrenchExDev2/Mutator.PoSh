@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the GuestBase tests.
+
+.DESCRIPTION
+Provisioning requires owned storage, verified KVM/resources and matching readiness pins.
+Cancellation, OOM, abnormal exits and installation failures cannot be overridden by late green
+proof; restart/stop must preserve ownership.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
 }

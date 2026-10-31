@@ -1,4 +1,12 @@
 function Read-MutatorGuestRun {
+    <#
+    .SYNOPSIS
+    Load a retained managed guest identity from a directory or receipt.
+
+    .DESCRIPTION
+    Requires a recognized kind and run ID. Returns the receipt path and parsed run for ownership checks.
+    #>
+
     param([string]$Path)
     $resolved=$ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
     $file=if(Test-Path -LiteralPath $resolved -PathType Container){Join-Path $resolved 'guest.json'}else{$resolved}
@@ -8,6 +16,15 @@ function Read-MutatorGuestRun {
 }
 
 function Get-MutatorOwnedGuest {
+    <#
+    .SYNOPSIS
+    Inspect a guest and verify its retained ownership.
+
+    .DESCRIPTION
+    Restores engine context and requires exact container ID and matching run label. Foreign or
+    unavailable containers are refused.
+    #>
+
     param([Collections.IDictionary]$Run)
     if(!$Run['ContainerId']){throw 'The guest run has no created container identity.'}
     Restore-MutatorContainerContext $Run
@@ -19,6 +36,15 @@ function Get-MutatorOwnedGuest {
 }
 
 function Test-MutatorGuestReadiness {
+    <#
+    .SYNOPSIS
+    Check readiness against the expected pinned guest runtime.
+
+    .DESCRIPTION
+    Requires success, matching fingerprint, exact PowerShell/SDK versions and one entry for every tool.
+    Duplicate or unknown tools fail.
+    #>
+
     param([Collections.IDictionary]$Run,[Collections.IDictionary]$Proof)
     if($Proof['Outcome'] -cne 'Success' -or $Proof['Fingerprint'] -cne $Run.Fingerprint -or
         $Proof['PowerShell'] -cne $Run.ExpectedPowerShell -or $Proof['DotnetSdk'] -cne $Run.ExpectedDotnetSdk){return $false}

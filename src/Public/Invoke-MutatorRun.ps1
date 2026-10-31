@@ -1,4 +1,13 @@
 function Invoke-MutatorRun {
+    <#
+    .SYNOPSIS
+    Schedule selected modules for isolated mutation or recheck.
+
+    .DESCRIPTION
+    Validates scope, isolation and budgets before launch. Supports synchronous, interactive and detached
+    monitoring with retained plans/evidence.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][Alias('Path')][string[]]$ModulePath, [string[]]$Include=@('*'), [string]$SourceRoot, [string]$RunRoot,
         [ValidateSet('Windows','Linux')][string]$OS,
@@ -29,6 +38,8 @@ function Invoke-MutatorRun {
     if ($ResumeFrom -and $paths.Count -ne 1) { throw 'Resume requires one explicit module.' }
     if($RecheckFrom){
         if($ResumeFrom -or $paths.Count -ne 1){throw 'Recheck requires one explicit module and cannot be combined with resume.'}
+        if($Workers -and $Workers -ne 1){throw 'Recheck uses one worker; do not request parallel mutation workers for a diagnostic recheck.'}
+        $Workers=1
         $RecheckFrom=(Resolve-Path -LiteralPath $RecheckFrom -ErrorAction Stop).ProviderPath
         $prior=Read-MutatorJson $RecheckFrom
         if(!@($prior['survivors']).Count){throw 'Recheck requires recorded survivors.'}

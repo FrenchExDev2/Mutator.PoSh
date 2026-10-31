@@ -1,4 +1,13 @@
 function Import-MutatorRun {
+    <#
+    .SYNOPSIS
+    Reference historical receipts as read-only dashboard evidence.
+
+    .DESCRIPTION
+    Validates discovery and preserves incomplete observations. Import executes no mutations and cannot
+    alone supply resume context.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$Path,[string]$RunRoot,[ValidateSet('Interrupted','Failed','Success')][string]$Outcome='Interrupted')
     $sourcePath=(Resolve-Path -LiteralPath $Path -ErrorAction Stop).ProviderPath

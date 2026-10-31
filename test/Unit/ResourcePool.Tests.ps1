@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the ResourcePool tests.
+
+.DESCRIPTION
+Reserve workers/memory under a shared lease and refresh idle stale policy. Reject impossible
+reservations before launch and block additional allocation at capacity.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'Shared mutation resource leases' {
     It 'replaces an idle stale pool policy so a larger guest reservation can start' {

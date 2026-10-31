@@ -1,4 +1,13 @@
 function Confirm-MutatorWindowsResumeSource {
+    <#
+    .SYNOPSIS
+    Compare declared dependencies with a Windows resume receipt.
+
+    .DESCRIPTION
+    Requires an exact set and one matching hash per subtree. Changed sources/tests/dependencies fail
+    before allocation.
+    #>
+
     param([string]$Path,[string]$SourceRoot,[string[]]$Subtrees)
     $receipt=Read-MutatorJson ($Path+'.context.json')
     $dependencies=@($receipt.Identity.Dependencies)

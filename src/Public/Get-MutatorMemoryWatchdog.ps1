@@ -1,4 +1,12 @@
 function Get-MutatorMemoryWatchdog {
+    <#
+    .SYNOPSIS
+    Read watchdog policy, usage and liveness.
+
+    .DESCRIPTION
+    Returns thresholds, last action and masked errors without starting monitoring or recovery.
+    #>
+
     [CmdletBinding()]
     param([string]$Path)
     if(!$Path){$Path=Join-Path $script:MutatorRoot 'test/Artifacts/memory-watchdog'}

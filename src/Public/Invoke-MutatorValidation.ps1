@@ -1,4 +1,13 @@
 function Invoke-MutatorValidation {
+    <#
+    .SYNOPSIS
+    Orchestrate selected suites across selected operating systems.
+
+    .DESCRIPTION
+    Freezes sources and runs platforms sequentially with aggregate proof. Partial selections and missing
+    platforms do not qualify a full gate.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [ValidateSet('Unit','Mutations','Integration')][string[]]$Test=@('Unit','Integration','Mutations'),

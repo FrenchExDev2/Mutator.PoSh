@@ -1,4 +1,13 @@
 function Confirm-MutatorGuestMutationResult {
+    <#
+    .SYNOPSIS
+    Validate transport, package outcome and full guest mutation evidence.
+
+    .DESCRIPTION
+    Requires owner/job IDs, provenance and configured C# gate. Transport success cannot hide partial
+    reports, empty discovery or survivors.
+    #>
+
     param([Collections.IDictionary]$Result,[Collections.IDictionary]$State,[string]$RunId,[string]$JobId,[switch]$RequireStryker)
     if(!$Result -or $Result.RunId -cne $RunId -or $Result.JobId -cne $JobId){throw 'The Windows mutation result is missing or belongs to another job.'}
     if($Result.Outcome -ceq 'TimedOut'){throw [TimeoutException]::new('The Windows mutation job timed out; available state, logs and reports are retained.')}
@@ -17,6 +26,15 @@ function Confirm-MutatorGuestMutationResult {
 }
 
 function Invoke-MutatorWindowsGuestPackage {
+    <#
+    .SYNOPSIS
+    Execute the legacy guest package lifecycle with retained proof.
+
+    .DESCRIPTION
+    Stages a private job, forwards stopping and cleans up owned resources. The public campaign
+    dispatcher rejects this legacy PSMutant runtime.
+    #>
+
     param([string]$RunDirectory,[Collections.IDictionary]$Run,[Collections.IDictionary]$Entry,[Collections.IDictionary]$State,[string]$StatePath)
     $artifacts=Split-Path $StatePath
     $guestPath=Join-Path $artifacts 'windows-guest'

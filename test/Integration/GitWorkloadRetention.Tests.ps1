@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the GitWorkloadRetention tests.
+
+.DESCRIPTION
+Failed workloads retain their sandbox and identity receipt; successful fixture workloads remove only
+their owned sandbox. Uses a child process with a stub workload, not real Git qualification.
+
+.NOTES
+Run this suite explicitly with its documented runtime prerequisites. Its result covers the asserted
+fixture scenarios and selected environment only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:RetentionModule=Split-Path (Split-Path $PSScriptRoot)
     Import-Module (Join-Path $script:RetentionModule 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking

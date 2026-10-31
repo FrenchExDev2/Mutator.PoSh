@@ -1,4 +1,13 @@
 function Restore-MutatorModuleState {
+    <#
+    .SYNOPSIS
+    Restore variables only while the original module and functions match.
+
+    .DESCRIPTION
+    Removes test-added variables and restores cloned values. Unsafe or replaced state throws for
+    caller-controlled fresh import.
+    #>
+
     param([object]$State)
     $module = $State.Module
     $loaded = @(Get-Module -Name $module.Name -All | Where-Object { [object]::ReferenceEquals($_, $module) })

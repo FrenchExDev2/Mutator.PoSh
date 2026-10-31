@@ -1,4 +1,13 @@
 function Get-MutatorValidationImage {
+    <#
+    .SYNOPSIS
+    Select one pinned tool image or shared validation runtime.
+
+    .DESCRIPTION
+    Rejects competing binary contributors. Builds or reuses the platform image through the existing
+    image boundaries.
+    #>
+
     param([string]$Platform,[string]$Source,[string]$OutputDirectory,[string]$Connection,[string[]]$ModuleNames=@())
     $tools=@(foreach($name in $ModuleNames){
         $path=Join-Path $Source $name
@@ -17,6 +26,15 @@ function Get-MutatorValidationImage {
 }
 
 function Get-MutatorValidationBaseImage {
+    <#
+    .SYNOPSIS
+    Resolve a source-bound shared platform image.
+
+    .DESCRIPTION
+    Reuses only immutable images with the expected fingerprint. Guest bases require verified clean
+    seeds; missing Linux bases can be built.
+    #>
+
     param([string]$Platform,[string]$Source,[string]$OutputDirectory,[string]$Connection)
     $definition=Export-MutatorContainerBaseDefinition -ModuleRoot $Source
     $runtime=Get-MutatorContainerRuntime $Source
@@ -43,6 +61,15 @@ function Get-MutatorValidationBaseImage {
 }
 
 function Invoke-MutatorValidationContainer {
+    <#
+    .SYNOPSIS
+    Execute validation in an owned container or guest.
+
+    .DESCRIPTION
+    Enforces budgets/ownership and verifies returned source/module/suite identity. Recovers reports
+    before removal, retaining containers when recovery fails.
+    #>
+
     param([string]$Platform,[string]$Source,[Collections.IDictionary]$Request,[string]$OutputDirectory,[string]$Connection,[Collections.IDictionary]$Run,[switch]$UI)
     [void][IO.Directory]::CreateDirectory($OutputDirectory)
     $image=Get-MutatorValidationImage -Platform $Platform -Source $Source -OutputDirectory $OutputDirectory -Connection $Connection -ModuleNames $Request.Modules

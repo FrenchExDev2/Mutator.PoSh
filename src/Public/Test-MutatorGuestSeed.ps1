@@ -1,4 +1,12 @@
 function Test-MutatorGuestSeed {
+    <#
+    .SYNOPSIS
+    Verify independent qcow2 overlays against one immutable seed.
+
+    .DESCRIPTION
+    Uses controlled writes without booting Windows. Rejects stale proof or a foreign backing chain.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$Image,[Parameter(Mandatory)][string]$OutputDirectory,[string]$Connection)
     $output=$ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputDirectory)

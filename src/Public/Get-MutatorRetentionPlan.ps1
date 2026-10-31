@@ -1,4 +1,13 @@
 function Get-MutatorRetentionPlan {
+    <#
+    .SYNOPSIS
+    Plan old successful native runs without deleting evidence.
+
+    .DESCRIPTION
+    Protects recent, active, incomplete, imported and linked runs. Bounds items while retaining exact
+    eligible counts.
+    #>
+
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$RunRoot,[ValidateRange(0,10000)][int]$KeepLast=20,
         [datetimeoffset]$BeforeUtc=[datetimeoffset]::UtcNow.AddDays(-30),[ValidateRange(0,1000)][int]$MaxItems=20)

@@ -1,8 +1,32 @@
+<#
+.SYNOPSIS
+Expected behavior for the ReportContracts tests.
+
+.DESCRIPTION
+Import historical evidence read-only and export complete hash-bound package proof only within
+authorized artifact paths. Missing/changed/C# evidence stays explicit and invalid IDs or redirected
+metadata cannot escape storage.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:ReportingModuleRoot=Split-Path (Split-Path $PSScriptRoot)
     Import-Module (Join-Path $script:ReportingModuleRoot 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
     Import-Module (Join-Path (Split-Path $script:ReportingModuleRoot) 'FrenchExDev.DevPoSh.PoSh/FrenchExDev.DevPoSh.PoSh.psd1') -Force -DisableNameChecking
     function Save-ReportFixtureJson {
+        <#
+        .SYNOPSIS
+        Write a controlled retained-report document for export/import tests.
+
+        .DESCRIPTION
+        Creates fixture parent directories and preserves nested test data for provenance, containment and
+        outcome assertions.
+        #>
+
         param([string]$Path,[object]$Data)
         [void][IO.Directory]::CreateDirectory((Split-Path $Path))
         [IO.File]::WriteAllText($Path,($Data|ConvertTo-Json -Depth 15))

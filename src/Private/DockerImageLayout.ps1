@@ -1,4 +1,13 @@
 function Resolve-MutatorDockerArchiveFile {
+    <#
+    .SYNOPSIS
+    Resolve an archive entry inside its owned extraction directory.
+
+    .DESCRIPTION
+    Rejects blank, rooted and escaping names before returning an absolute target path. Shared by
+    extraction and image-layout conversion.
+    #>
+
     param([string]$Root,[string]$Name)
     $prefix=[IO.Path]::GetFullPath($Root)+[IO.Path]::DirectorySeparatorChar
     $path=[IO.Path]::GetFullPath((Join-Path $Root $Name))
@@ -9,6 +18,15 @@ function Resolve-MutatorDockerArchiveFile {
 }
 
 function Expand-MutatorDockerArchive {
+    <#
+    .SYNOPSIS
+    Extract regular Docker image entries into an owned directory.
+
+    .DESCRIPTION
+    Rejects links and unsupported types, validates every target and creates files without overwriting
+    entries. Disposes archive streams on failure.
+    #>
+
     param([string]$Archive,[string]$Destination)
     [void][IO.Directory]::CreateDirectory($Destination)
     $stream=[IO.File]::OpenRead($Archive)
@@ -28,6 +46,15 @@ function Expand-MutatorDockerArchive {
 }
 
 function Copy-MutatorDockerBlob {
+    <#
+    .SYNOPSIS
+    Copy a regular image file into content-addressed OCI blob storage.
+
+    .DESCRIPTION
+    Uses a lowercase SHA-256 filename and returns media type, digest and byte count. Refuses directories
+    and links.
+    #>
+
     param([string]$Path,[string]$Blobs,[string]$MediaType)
     $file=Get-Item -LiteralPath $Path -ErrorAction Stop
     if($file.PSIsContainer -or ($file.Attributes -band [IO.FileAttributes]::ReparsePoint)){throw 'An image blob must be a regular file.'}
@@ -38,6 +65,15 @@ function Copy-MutatorDockerBlob {
 }
 
 function ConvertTo-MutatorDockerImageLayout {
+    <#
+    .SYNOPSIS
+    Convert one exported Docker image into an immutable OCI build context.
+
+    .DESCRIPTION
+    Checks the exported configuration against the inspected image ID and retains layer media types.
+    Returns layout, manifest and BuildKit reference.
+    #>
+
     param([string]$Archive,[string]$Destination,[string]$ExpectedImageId)
     $unpacked=Join-Path $Destination 'archive';Expand-MutatorDockerArchive $Archive $unpacked
     $manifests=@(Get-Content -LiteralPath (Join-Path $unpacked 'manifest.json') -Raw|ConvertFrom-Json -AsHashtable)

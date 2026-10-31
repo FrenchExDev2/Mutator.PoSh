@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the ValidationNativeStop tests.
+
+.DESCRIPTION
+A quiet child must receive cancellation without emitting another record. Validation forwarding must
+retain native evidence and avoid starting an already-cancelled child.
+
+.NOTES
+Run this suite explicitly with its documented runtime prerequisites. Its result covers the asserted
+fixture scenarios and selected environment only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll { Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking }
 Describe 'Validation native cancellation signal' {
     It 'cancels a quiet child through Mutator without requiring another output record' {

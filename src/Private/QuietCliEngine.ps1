@@ -1,4 +1,13 @@
 function Import-MutatorQuietCli {
+    <#
+    .SYNOPSIS
+    Load QuietCli from the expected sibling ecosystem.
+
+    .DESCRIPTION
+    Reuses the correctly loaded engine and refuses copies from another path. Missing engines fail
+    without archived-provider fallback.
+    #>
+
     # A host, a sandbox and an image all keep QuietCli at this same location beside Mutator.
     $directory=[IO.Path]::GetFullPath((Join-Path (Split-Path $script:MutatorRoot) 'QuietCliEcosystem/FrenchExDev.QuietCli.PoSh'))
     $comparison=if($IsWindows){[StringComparison]::OrdinalIgnoreCase}else{[StringComparison]::Ordinal}
@@ -12,6 +21,15 @@ function Import-MutatorQuietCli {
     Import-Module $manifest -DisableNameChecking -ErrorAction Stop
 }
 function Invoke-MutatorQuietOperation {
+    <#
+    .SYNOPSIS
+    Run an operation under scoped Mutator QuietCli settings.
+
+    .DESCRIPTION
+    Passes inherited configuration to the operation and restores the caller's environment even on
+    failure.
+    #>
+
     param([Parameter(Mandatory)][scriptblock]$Operation)
     Import-MutatorQuietCli
     # The configuration path has no parameter. Restoring it keeps a host session's own pump settings intact.

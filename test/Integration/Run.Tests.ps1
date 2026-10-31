@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the Run tests.
+
+.DESCRIPTION
+Small real fixture campaigns must respect shared worker budgets, discover a nonempty complete scope
+and retain progress/context proof. Cooperative stopping must produce a scoreless partial report that
+resumes only with identical inputs; required isolation must be available.
+
+.NOTES
+Run this suite explicitly with its documented runtime prerequisites. Its result covers the asserted
+fixture scenarios and selected environment only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:ModuleRoot=Split-Path (Split-Path $PSScriptRoot)
     Import-Module (Join-Path $script:ModuleRoot 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking

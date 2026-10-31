@@ -1,4 +1,13 @@
 function New-MutatorSandboxConfiguration {
+    <#
+    .SYNOPSIS
+    Create Windows Sandbox XML with explicit mappings.
+
+    .DESCRIPTION
+    Escapes paths, sets memory and disables networking, vGPU and clipboard. Returns XML without
+    launching a sandbox.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Pure XML factory; no process or filesystem mutation.')]
     [CmdletBinding()]
     param([Parameter(Mandatory)][AllowEmptyCollection()][object[]]$Mappings,[int]$MemoryMiB=4096)
@@ -12,6 +21,14 @@ function New-MutatorSandboxConfiguration {
 }
 
 function Invoke-MutatorSandboxCommand {
+    <#
+    .SYNOPSIS
+    Execute a Windows Sandbox CLI operation with local logs.
+
+    .DESCRIPTION
+    Requires wsb.exe, raw mode and host OEM encoding. Native failures throw without host fallback.
+    #>
+
     param([string[]]$Arguments,[string]$Directory,[int]$TimeoutSeconds=120)
     if(!(Get-Command wsb -CommandType Application -ErrorAction Ignore)){throw 'Windows Sandbox CLI (wsb.exe) is required; execution on the host is prohibited.'}
     $encoding=[Text.Encoding]::GetEncoding([Globalization.CultureInfo]::CurrentCulture.TextInfo.OEMCodePage).WebName
@@ -25,6 +42,15 @@ function Invoke-MutatorSandboxCommand {
 }
 
 function Copy-MutatorSandboxRuntime {
+    <#
+    .SYNOPSIS
+    Prepare a private Windows payload from installed tools.
+
+    .DESCRIPTION
+    Copies PowerShell, pinned Pester/PSMutant and optional development tools. Missing pins fail without
+    downloading replacements.
+    #>
+
     param([string]$Destination)
     if(!$IsWindows){throw 'The portable Windows runtime must be prepared on Windows.'}
     Copy-MutatorTree $PSHOME (Join-Path $Destination 'pwsh')
@@ -41,6 +67,14 @@ function Copy-MutatorSandboxRuntime {
 }
 
 function Stop-MutatorWindowsSandbox {
+    <#
+    .SYNOPSIS
+    Stop the sandbox identified by an owned GUID.
+
+    .DESCRIPTION
+    Rejects invalid IDs before calling the client and targets only that session.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Private cleanup runs inside the public campaign or Stop-MutatorRun ShouldProcess boundary and targets only the owned ID.')]
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$Id,[string]$Directory)
@@ -50,6 +84,15 @@ function Stop-MutatorWindowsSandbox {
 }
 
 function Invoke-MutatorWindowsSandboxPackage {
+    <#
+    .SYNOPSIS
+    Run one package in an owned Windows Sandbox.
+
+    .DESCRIPTION
+    Maps inputs read-only and exchange storage writable, freezes resume/recheck inputs and retains
+    reports. Always attempts cleanup of the generated ID.
+    #>
+
     param([string]$RunDirectory,[Collections.IDictionary]$Run,[Collections.IDictionary]$Entry,
         [Collections.IDictionary]$State,[string]$StatePath)
     if(!$IsWindows){throw 'Windows Sandbox requires a Windows host.'}

@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the GuestModule tests.
+
+.DESCRIPTION
+Prepare a fresh owned overlay/share and require matching base/module/payload identity.
+Provisioning/job failures remain failed, WhatIf allocates nothing and no foreign or occupied share
+may be reused.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'Windows module guest provisioning and jobs' {
     It 'rejects a nonempty custom share before starting any guest' {

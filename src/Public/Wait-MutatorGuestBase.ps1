@@ -1,4 +1,13 @@
 function Wait-MutatorGuestBase {
+    <#
+    .SYNOPSIS
+    Poll preparation until readiness, failure or deadline.
+
+    .DESCRIPTION
+    Retains state and optionally stops when ready. Timeout stops the owned guest while preserving
+    storage and proof.
+    #>
+
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$Path,[ValidateRange(1,240)][int]$TimeoutMinutes=60,[switch]$StopWhenReady,[switch]$UI)
     $deadline=(Get-MutatorUtcNow).AddMinutes($TimeoutMinutes)

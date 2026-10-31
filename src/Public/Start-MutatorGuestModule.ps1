@@ -1,4 +1,13 @@
 function Start-MutatorGuestModule {
+    <#
+    .SYNOPSIS
+    Start a prepared module guest with an isolated overlay.
+
+    .DESCRIPTION
+    Checks image/payload identity and memory, stages a fresh share and retains state. Refuses occupied
+    shares and existing receipts.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$Image,[Parameter(Mandatory)][string]$OutputDirectory,[string]$Connection,[string]$ShareDirectory,
         [ValidateRange(2048,65536)][int]$MemoryMiB=6144,[ValidateRange(2048,64512)][int]$GuestMemoryMiB=4096,[ValidateRange(1,64)][int]$Cpus=2)

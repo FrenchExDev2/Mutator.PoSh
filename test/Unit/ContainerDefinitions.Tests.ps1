@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the ContainerDefinitions tests.
+
+.DESCRIPTION
+Contributor metadata must produce complete platform definitions with existing COPY inputs. Preserve
+recipe ownership, canonical platform names, explicit incompatibility and manual edits unless
+regeneration is authorized.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:ContainerModuleRoot=Split-Path (Split-Path $PSScriptRoot)
     $script:WorkspaceModules=Split-Path $script:ContainerModuleRoot

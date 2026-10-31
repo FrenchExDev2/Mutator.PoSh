@@ -1,18 +1,52 @@
 function Test-MutatorWindowsPlatform {
+    <#
+    .SYNOPSIS
+    Report whether the runtime is running on Windows.
+
+    .DESCRIPTION
+    Uses the actual runtime OS boundary, which tests can replace without invoking Windows services.
+    #>
+
     [Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([Runtime.InteropServices.OSPlatform]::Windows)
 }
 
 function Test-MutatorLinuxPlatform {
+    <#
+    .SYNOPSIS
+    Report whether the runtime is running on Linux.
+
+    .DESCRIPTION
+    Provides a replaceable OS boundary for ownership and execution tests.
+    #>
+
     [Runtime.InteropServices.RuntimeInformation]::IsOSPlatform([Runtime.InteropServices.OSPlatform]::Linux)
 }
 
 function Get-MutatorHostPlatform {
+    <#
+    .SYNOPSIS
+    Return the host platform name used in validation metadata.
+
+    .DESCRIPTION
+    Selects Windows, Linux or MacOS from runtime boundaries. Host identity does not prove guest
+    execution.
+    #>
+
     if(Test-MutatorWindowsPlatform){return 'Windows'}
     if(Test-MutatorLinuxPlatform){return 'Linux'}
     'MacOS'
 }
 
 function Get-MutatorHostMemorySample {
+    <#
+    .SYNOPSIS
+    Sample Windows physical RAM and candidate PowerShell processes.
+
+    .DESCRIPTION
+    Reads CIM counters, excludes itself and retains identity plus working-set bytes. Invalid memory
+    samples fail explicitly.
+    #>
+
     $os=Get-CimInstance Win32_OperatingSystem -ErrorAction Stop
     $used=([long]$os.TotalVisibleMemorySize-[long]$os.FreePhysicalMemory)*1024
     if($used -le 0){throw 'The host memory sample is invalid.'}
@@ -24,6 +58,15 @@ function Get-MutatorHostMemorySample {
 }
 
 function Get-MutatorMemoryRecoveryTarget {
+    <#
+    .SYNOPSIS
+    Select a registered worker above the host recovery threshold.
+
+    .DESCRIPTION
+    Examines candidates above the minimum working set, largest first, returning only verified Mutator
+    ownership.
+    #>
+
     param([Collections.IDictionary]$Sample,[Collections.IDictionary]$Settings)
     if($Sample.UsedBytes -lt $Settings.TriggerBytes){return}
     foreach($candidate in @($Sample.Processes|Where-Object {$_.Id -ne $PID -and $_.WorkingSetBytes -ge $Settings.MinimumProcessBytes}|Sort-Object WorkingSetBytes -Descending)){
@@ -33,6 +76,15 @@ function Get-MutatorMemoryRecoveryTarget {
 }
 
 function Invoke-MutatorMemoryRecovery {
+    <#
+    .SYNOPSIS
+    Stop an owned run and restart unfinished packages after workers exit.
+
+    .DESCRIPTION
+    Rechecks identity, locks recovery and retains evidence. Resumes valid partial reports when available
+    and preserves run options.
+    #>
+
     param([Collections.IDictionary]$Target,[string]$Directory)
     $current=Get-CimInstance Win32_Process -Filter ('ProcessId='+$Target.Id) -ErrorAction Stop
     if(!$current -or $current.Name -ine 'pwsh.exe' -or $current.CreationDate.ToUniversalTime().ToString('O') -cne $Target.StartedUtc -or $current.ParentProcessId -ne $Target.ParentId){throw 'Memory recovery refused: the selected process identity changed.'}
@@ -80,6 +132,14 @@ function Invoke-MutatorMemoryRecovery {
 }
 
 function Stop-MutatorMemoryProcess {
+    <#
+    .SYNOPSIS
+    Terminate a recovery process after rechecking creation time.
+
+    .DESCRIPTION
+    Refuses its own PID and recycled identities. Disposes the process handle after terminating its tree.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Private action is authorized by starting the memory watchdog; the exact process identity is rechecked here.')]
     [CmdletBinding()]
     param([Collections.IDictionary]$Target)
@@ -92,6 +152,15 @@ function Stop-MutatorMemoryProcess {
 }
 
 function Invoke-MutatorMemoryWatchdogLoop {
+    <#
+    .SYNOPSIS
+    Monitor host memory until an explicit watchdog stop.
+
+    .DESCRIPTION
+    Retains samples/outcomes, applies cooldowns and acts only on owned workers or the configured Podman
+    VM. Monitoring errors remain visible.
+    #>
+
     param([string]$Directory)
     $settings=Read-MutatorJson (Join-Path $Directory 'watchdog.json')
     $state=@{Outcome='Monitoring';Utc=[datetime]::UtcNow.ToString('O');UsedBytes=0L;LastAction=$null;Error=$null}

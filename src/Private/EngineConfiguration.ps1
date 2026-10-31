@@ -1,16 +1,43 @@
 function Get-MutatorEngineConfigurationPath {
+    <#
+    .SYNOPSIS
+    Resolve the Mutator engine configuration path.
+
+    .DESCRIPTION
+    Uses MUTATOR_CONFIG_PATH when supplied, otherwise the user's .mutator/config.yaml path. Does not
+    read or create it.
+    #>
+
     $path=[Environment]::GetEnvironmentVariable('MUTATOR_CONFIG_PATH')
     if($path){return $path}
     Join-Path $HOME '.mutator/config.yaml'
 }
 
 function Import-MutatorConfigurationYaml {
+    <#
+    .SYNOPSIS
+    Load the YAML runtime supplied by the active QuietCli engine.
+
+    .DESCRIPTION
+    Reuses its YamlDotNet assembly to avoid binding compiled helpers to incompatible YAML library
+    versions.
+    #>
+
     # Use the library already distributed with our engine. Loading powershell-yaml
     # as well binds its compiled helpers to a different YamlDotNet assembly.
     Import-MutatorQuietCli
 }
 
 function Read-MutatorYamlDocument {
+    <#
+    .SYNOPSIS
+    Read YAML with duplicate-key checking and typed scalar conversion.
+
+    .DESCRIPTION
+    Normalizes parsed values into PowerShell mappings while preserving date strings. Empty documents
+    return an empty ordered mapping.
+    #>
+
     param([string]$Path)
     Import-MutatorConfigurationYaml
     $text=[IO.File]::ReadAllText($Path)
@@ -21,6 +48,15 @@ function Read-MutatorYamlDocument {
 }
 
 function Read-MutatorEngineConfiguration {
+    <#
+    .SYNOPSIS
+    Read and validate the top-level engine configuration.
+
+    .DESCRIPTION
+    Missing files return an empty mapping. Existing documents must contain only the canonical docker and
+    podman sections.
+    #>
+
     param([string]$Path)
     if(!(Test-Path -LiteralPath $Path)){return @{}}
     $document=Read-MutatorYamlDocument $Path
@@ -30,6 +66,15 @@ function Read-MutatorEngineConfiguration {
 }
 
 function Write-MutatorEngineConfiguration {
+    <#
+    .SYNOPSIS
+    Persist settings through a temporary YAML file and atomic replacement.
+
+    .DESCRIPTION
+    Uses the shared YAML runtime and UTF-8 without a BOM. Cleans up the temporary file even when
+    replacement fails.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Private atomic persistence runs inside the public configuration or migration ShouldProcess boundary.')]
     [CmdletBinding()]
     param([string]$Path,[Collections.IDictionary]$Document)
@@ -47,6 +92,15 @@ function Write-MutatorEngineConfiguration {
 }
 
 function ConvertTo-MutatorEngineSetting {
+    <#
+    .SYNOPSIS
+    Normalize and validate one engine configuration section.
+
+    .DESCRIPTION
+    Supplies defaults and rejects unknown keys, non-Boolean flags and invalid endpoints. Returns a
+    canonical setting object.
+    #>
+
     param([string]$Name,[object]$Section)
     $setting=@{pipe=$null;enabled=$true;default=$false}
     if($null -ne $Section){
@@ -63,6 +117,15 @@ function ConvertTo-MutatorEngineSetting {
 }
 
 function Assert-MutatorEngineDefault {
+    <#
+    .SYNOPSIS
+    Require at most one enabled default engine.
+
+    .DESCRIPTION
+    Throws for multiple defaults or a disabled default. A configuration without an explicit default is
+    allowed.
+    #>
+
     param([object[]]$Setting)
     $defaults=@($Setting|Where-Object Default)
     if($defaults.Count -gt 1){throw 'Only one container engine can have default: true.'}

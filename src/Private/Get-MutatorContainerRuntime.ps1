@@ -1,4 +1,13 @@
 function Get-MutatorContainerRuntime {
+    <#
+    .SYNOPSIS
+    Compute pinned runtime identities and shared image names.
+
+    .DESCRIPTION
+    Hashes versions, bootstrap sources and templates. Keeps guest-base, macOS and host-controller
+    identities distinct for appropriate image reuse.
+    #>
+
     param([string]$ModuleRoot)
     $directory=Join-Path $script:MutatorRoot 'resources/containers/definitions'
     $runtime=Import-PowerShellDataFile (Join-Path $directory 'runtime-versions.psd1')

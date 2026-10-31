@@ -1,4 +1,13 @@
 function Get-MutatorLanguage {
+    <#
+    .SYNOPSIS
+    Select the available localization catalog from MUTATOR_LANG.
+
+    .DESCRIPTION
+    Defaults to French and falls back to English for invalid or unsupported values. Does not change
+    process UI culture.
+    #>
+
     $value=[Environment]::GetEnvironmentVariable('MUTATOR_LANG')
     if([string]::IsNullOrWhiteSpace($value)){return 'fr-FR'}
     try{$culture=[Globalization.CultureInfo]::CreateSpecificCulture($value.Trim())}catch{return 'en-US'}
@@ -8,6 +17,15 @@ function Get-MutatorLanguage {
 }
 
 function Get-MutatorText {
+    <#
+    .SYNOPSIS
+    Read and format a required localized message.
+
+    .DESCRIPTION
+    Caches catalogs by language and applies formatting arguments. Missing keys throw instead of
+    returning incomplete labels.
+    #>
+
     param([Parameter(Mandatory)][string]$Key,[object[]]$ArgumentList=@())
     $language=Get-MutatorLanguage
     if(!$script:MutatorMessageCatalog.ContainsKey($language)){

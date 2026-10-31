@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the ContextIdentity tests.
+
+.DESCRIPTION
+Context hashes cover sources, tests, dependencies, effective configuration, tools, runtime and image
+identity. Ignore cache location, artifacts and timestamps; missing Pester or changed retained inputs
+invalidate identity.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'Complete mutation context identity' {
     BeforeEach {

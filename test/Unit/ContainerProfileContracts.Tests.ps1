@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the ContainerProfileContracts tests.
+
+.DESCRIPTION
+Use the reviewed installer, binary, package pins and platform constraints for every tool profile.
+Unknown tools, missing pins and unsupported Apple-only tools must fail before installation is
+claimed.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
 }

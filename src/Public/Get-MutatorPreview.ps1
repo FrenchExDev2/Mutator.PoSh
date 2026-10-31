@@ -1,4 +1,13 @@
 function Get-MutatorPreview {
+    <#
+    .SYNOPSIS
+    Discover mutation inventory in an owned temporary copy.
+
+    .DESCRIPTION
+    Stages dependencies and invokes list-only discovery. Cleans up its own directory without executing a
+    campaign.
+    #>
+
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$ModulePath)
     $root=(Resolve-Path -LiteralPath $ModulePath -ErrorAction Stop).ProviderPath

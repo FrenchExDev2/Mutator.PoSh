@@ -1,4 +1,13 @@
 function Initialize-MutatorImagePrerequisite {
+    <#
+    .SYNOPSIS
+    Prepare known local parent images for a generated Dockerfile.
+
+    .DESCRIPTION
+    Locks dependency builds, inspects images and builds missing recognized variants. Unknown localhost
+    dependencies fail instead of implicit pulls.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Private dependency builder runs inside the explicit New-MutatorContainerImage ShouldProcess boundary.')]
     [CmdletBinding()]
     param([string]$Dockerfile,[string]$ModuleRoot,[string]$OutputDirectory,[string]$Connection,[int]$MemoryMiB,[int]$Cpus,[int]$TimeoutSeconds,[string]$BaseImage)

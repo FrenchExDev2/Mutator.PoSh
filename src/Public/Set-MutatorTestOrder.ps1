@@ -1,4 +1,13 @@
 function Set-MutatorTestOrder {
+    <#
+    .SYNOPSIS
+    Reorder associations without removing tests or mutants.
+
+    .DESCRIPTION
+    FocusedFirst prioritizes nearby unit tests; Configured keeps original order. Returns association
+    counts and Removed zero.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Reorders only the caller-owned staged configuration object; performs no I/O or execution.')]
     [CmdletBinding()]
     param([Collections.IDictionary]$Configuration, [ValidateSet('Configured','FocusedFirst')][string]$Order = 'FocusedFirst')

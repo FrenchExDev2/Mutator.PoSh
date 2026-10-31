@@ -1,4 +1,13 @@
 function Restart-MutatorGuestBase {
+    <#
+    .SYNOPSIS
+    Restart a verified stopped guest without recreating storage.
+
+    .DESCRIPTION
+    Requires ownership and readiness/payload identity. Preserves disks and refuses unverified bases
+    rather than reinstalling.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$Path)
     $stored=Read-MutatorGuestRun $Path;$run=$stored.Run

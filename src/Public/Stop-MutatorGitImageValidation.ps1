@@ -1,4 +1,13 @@
 function Stop-MutatorGitImageValidation {
+    <#
+    .SYNOPSIS
+    Request an identity-bound stop for a Git validation.
+
+    .DESCRIPTION
+    Signals workload/controller while preserving proof. Forced handling remains constrained to owned
+    process identities.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$Path,[switch]$Force)
     $directory=(Resolve-Path -LiteralPath $Path -ErrorAction Stop).ProviderPath

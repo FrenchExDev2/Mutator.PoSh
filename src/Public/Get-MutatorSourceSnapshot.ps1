@@ -1,4 +1,13 @@
 function Get-MutatorSourceSnapshot {
+    <#
+    .SYNOPSIS
+    Fingerprint inputs while excluding generated state.
+
+    .DESCRIPTION
+    Rejects links and hashes sorted relative paths with content hashes. Timestamps and artifacts do not
+    affect identity.
+    #>
+
     param([string]$Root)
     $rootPath=[IO.Path]::GetFullPath($Root)
     $pending=[Collections.Generic.Stack[string]]::new();$pending.Push($rootPath)

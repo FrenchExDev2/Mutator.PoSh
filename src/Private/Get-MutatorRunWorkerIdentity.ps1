@@ -1,9 +1,27 @@
 function Read-MutatorProcessArgument {
+    <#
+    .SYNOPSIS
+    Read a Linux process's null-delimited argument vector.
+
+    .DESCRIPTION
+    Returns literal arguments without interpreting shell syntax. ProcRoot allows controlled process-tree
+    fixtures.
+    #>
+
     param([int]$Id,[string]$ProcRoot='/proc')
     [IO.File]::ReadAllText((Join-Path $ProcRoot ($Id.ToString()+'/cmdline'))).Split([char]0)
 }
 
 function Get-MutatorRunWorkerIdentity {
+    <#
+    .SYNOPSIS
+    Find live workers whose arguments identify the requested run.
+
+    .DESCRIPTION
+    Checks Windows command lines or Linux argv and excludes the current process. Returns PID and
+    creation time for matching scripts and directories.
+    #>
+
     param([string]$RunDirectory)
     $comparison=if(Test-MutatorWindowsPlatform){[StringComparison]::OrdinalIgnoreCase}else{[StringComparison]::Ordinal}
     foreach($process in Get-Process -Name pwsh -ErrorAction Ignore){

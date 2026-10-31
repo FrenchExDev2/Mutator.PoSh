@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the Containers tests.
+
+.DESCRIPTION
+Custom recipes require explicit verified bases and safe inputs; discovery must not silently
+substitute host execution. Retain build phases/failures, run workers offline and apply only reported
+resource controls.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
 }

@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the ContainerBuild tests.
+
+.DESCRIPTION
+Reuse requires exact build identity; explicit bases resolve to immutable images and dependency
+changes invalidate reuse. Builds retain resources/logs, never retry automatically, and reject bad
+inspection or WhatIf allocation.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
     $script:BuildModules=Split-Path (Split-Path (Split-Path $PSScriptRoot))

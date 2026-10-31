@@ -1,4 +1,13 @@
 function Test-MutatorGuestHost {
+    <#
+    .SYNOPSIS
+    Probe KVM/resources without booting a guest OS.
+
+    .DESCRIPTION
+    Checks capabilities and available memory/disk, retaining measured proof. Exit zero alone is
+    insufficient.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$Image,[Parameter(Mandatory)][string]$OutputDirectory,[string]$Connection,
         [ValidateRange(2048,65536)][int]$MemoryMiB=6144,[ValidateRange(32,1024)][int]$DiskGiB=64)

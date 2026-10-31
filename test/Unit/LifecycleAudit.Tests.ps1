@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the LifecycleAudit tests.
+
+.DESCRIPTION
+Recognize workers from actual script/run arguments rather than command strings mentioning a
+filename. Dashboard errors remain advisory with masked retained diagnostics.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'Audit ownership and advisory monitoring' {
     It 'recognizes the registered <Worker> with quoted native options' -ForEach @(@{Worker='Run-Worker.ps1'},@{Worker='Run-DetachedWorker.ps1'}) {

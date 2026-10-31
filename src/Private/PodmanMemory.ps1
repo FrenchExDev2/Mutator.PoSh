@@ -1,4 +1,13 @@
 function Invoke-MutatorPodmanCacheRecovery {
+    <#
+    .SYNOPSIS
+    Reclaim clean cache or compact free pages in a verified Podman VM.
+
+    .DESCRIPTION
+    Checks the named running machine and counters first. Retains measured intervention details,
+    including actual kernel compaction.
+    #>
+
     param([ValidatePattern('^[A-Za-z0-9][A-Za-z0-9_-]*$')][string]$Machine)
     $inspection=Invoke-MutatorNative podman @('machine','inspect',$Machine) $script:MutatorRoot 30
     if($inspection.Outcome -ne 'Success'){throw 'The configured Podman machine could not be verified.'}

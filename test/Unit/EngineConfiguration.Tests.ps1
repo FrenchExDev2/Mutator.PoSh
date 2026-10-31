@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the EngineConfiguration tests.
+
+.DESCRIPTION
+Engine YAML must preserve typed canonical settings and reject malformed, duplicate or unknown data.
+Persistence/migration must honor WhatIf, atomic replacement and unrelated source settings.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'Mutator owns persistent container configuration' {
     BeforeEach {$script:EngineConfig=Join-Path $TestDrive ([guid]::NewGuid().ToString('N')+'/config.yaml')}

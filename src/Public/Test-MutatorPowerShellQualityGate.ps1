@@ -1,4 +1,13 @@
 function Test-MutatorPowerShellQualityGate {
+    <#
+    .SYNOPSIS
+    Validate complete coverage and mutation for identical sources.
+
+    .DESCRIPTION
+    Requires exact inventories, full command/line/branch coverage and strict raw mutation proof before
+    writing success.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$ModulePath,[Parameter(Mandatory)][string]$CoveragePath,
         [Parameter(Mandatory)][string[]]$MutationRunPath,[string]$OutputPath)

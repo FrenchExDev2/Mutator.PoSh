@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the TestDiscoveryContracts tests.
+
+.DESCRIPTION
+Discover every semantic test while pruning artifacts before descent and validating paths once.
+Reject invalid entries and links without deleting repeated valid associations.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
 }

@@ -1,4 +1,13 @@
 function Start-MutatorLeasedWorker {
+    <#
+    .SYNOPSIS
+    Reserve shared workers and memory before starting a package.
+
+    .DESCRIPTION
+    Locks pool updates, drops dead leases and refreshes idle policy. Returns no worker when the lock or
+    capacity is unavailable.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Private launcher runs only after Invoke-MutatorRun has approved its single ShouldProcess boundary.')]
     [CmdletBinding()]
     param([string]$RunDirectory,[string]$Package,[Collections.IDictionary]$Schedule)

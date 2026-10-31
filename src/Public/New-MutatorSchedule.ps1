@@ -1,4 +1,13 @@
 function New-MutatorSchedule {
+    <#
+    .SYNOPSIS
+    Compute package ordering and slots within resource reservations.
+
+    .DESCRIPTION
+    Rejects empty/impossible plans and excess workers. Returns allocation rather than a system-enforced
+    memory cap.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Pure resource-plan factory; no process or resource is allocated by this function.')]
     [CmdletBinding()]
     param([string[]]$Packages, [Nullable[int]]$Workers, [int]$WorkerBudget = 4, [int]$ThrottleLimit = 2,

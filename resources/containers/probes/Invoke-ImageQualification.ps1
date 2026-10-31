@@ -11,12 +11,29 @@ $ErrorActionPreference='Stop'
 $module=Import-Module (Join-Path $ModuleRoot 'FrenchExDev.Mutator.PoSh/FrenchExDev.Mutator.PoSh.psd1') -PassThru -DisableNameChecking
 $summary=@{SchemaVersion=2;Scope='NativeToolAndEngineSmoke';Outcome='Running';Passed=0;Failed=0;Skipped=0;DiscoveryErrors=0;FullGateSatisfied=$false;Checks=@();PowerShell=$PSVersionTable.PSVersion.ToString()}
 function Invoke-ImageNative {
+    <#
+    .SYNOPSIS
+    Run an image probe through the captured native boundary.
+
+    .DESCRIPTION
+    Requires both retained streams to be complete; truncation fails rather than supporting partial
+    qualification proof.
+    #>
+
     param([string]$File,[string[]]$Arguments,[string]$Directory=$ProofDirectory,[int]$Timeout=60)
     $result=& $module {param($File,$Arguments,$Directory,$Timeout) Invoke-MutatorNative $File $Arguments $Directory $Timeout} $File $Arguments $Directory $Timeout
     if($result.StdoutTruncated -or $result.StderrTruncated){throw 'Qualification output was incomplete.'}
     $result
 }
 function Confirm-ImageCheck {
+    <#
+    .SYNOPSIS
+    Record one independently asserted qualification condition.
+
+    .DESCRIPTION
+    Throws with the check name on failure. Only satisfied conditions increment the success count.
+    #>
+
     param([string]$Name,[bool]$Condition)
     if(!$Condition){throw ('Image assertion failed: '+$Name)}
     $summary.Checks+=@{Name=$Name;Outcome='Success'};$summary.Passed++

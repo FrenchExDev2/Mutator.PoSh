@@ -1,4 +1,13 @@
 function Start-MutatorDetachedWorker {
+    <#
+    .SYNOPSIS
+    Launch an owned Windows supervisor, watchdog or Git controller independently.
+
+    .DESCRIPTION
+    Requires a retained plan, creates a hidden CIM process with the caller's environment and records
+    actual identity. Creation failures never claim a running worker.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Private background supervisor launch is authorized by the public run ShouldProcess boundary.')]
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$RunDirectory,[ValidateSet('Supervisor','MemoryWatchdog','GitValidation')][string]$Kind='Supervisor')

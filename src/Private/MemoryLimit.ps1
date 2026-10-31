@@ -1,4 +1,13 @@
 function ConvertTo-MutatorMemoryLimit {
+    <#
+    .SYNOPSIS
+    Parse a host RAM threshold into bytes.
+
+    .DESCRIPTION
+    Accepts decimal GB/Go and binary GiB/Gio, including decimal commas. Rejects malformed, infinite and
+    out-of-range thresholds.
+    #>
+
     param([Parameter(Mandatory)][string]$Value)
     if($Value.Trim() -notmatch '^(?<number>\d+(?:[.,]\d+)?)\s*(?<unit>go|gb|gio|gib)?$'){throw 'Ram expects a host limit such as 40go, 40GB or 40GiB.'}
     $number=[double]::Parse($Matches.number.Replace(',','.'),[Globalization.CultureInfo]::InvariantCulture)

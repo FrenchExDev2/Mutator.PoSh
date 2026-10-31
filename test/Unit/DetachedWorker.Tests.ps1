@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the DetachedWorker tests.
+
+.DESCRIPTION
+Detached launch requires a retained owned plan, hidden startup and the actual process identity.
+Creation failure cannot claim success; supervisors, watchdogs and Git controllers retain their
+distinct request contracts.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
     & (Get-Module FrenchExDev.Mutator.PoSh) {. (Join-Path $script:MutatorRoot 'test/Fixtures/WindowsCimContracts.ps1')}

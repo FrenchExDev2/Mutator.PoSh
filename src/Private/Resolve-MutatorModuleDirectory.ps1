@@ -1,4 +1,13 @@
 function Resolve-MutatorModuleDirectory {
+    <#
+    .SYNOPSIS
+    Find a real declared module under the active root.
+
+    .DESCRIPTION
+    Accepts canonical names at the root or in QuietCliEcosystem. Refuses missing and linked
+    module/parent directories.
+    #>
+
     param([Parameter(Mandatory)][string]$ModuleRoot,[Parameter(Mandatory)][string]$Name)
     if($Name -cnotmatch '^FrenchExDev\.[A-Za-z0-9_.-]+\.PoSh$'){throw 'Container dependencies must name FrenchExDev modules.'}
     $root=[IO.Path]::GetFullPath($ModuleRoot)
@@ -16,6 +25,14 @@ function Resolve-MutatorModuleDirectory {
 }
 
 function Get-MutatorModuleRoot {
+    <#
+    .SYNOPSIS
+    Resolve the common root for direct and ecosystem modules.
+
+    .DESCRIPTION
+    Returns the ecosystem's parent for modules inside QuietCliEcosystem, otherwise the module's parent.
+    #>
+
     param([Parameter(Mandatory)][string]$ModulePath)
     $parent=Split-Path ([IO.Path]::GetFullPath($ModulePath))
     if((Split-Path $parent -Leaf) -ceq 'QuietCliEcosystem'){return Split-Path $parent}

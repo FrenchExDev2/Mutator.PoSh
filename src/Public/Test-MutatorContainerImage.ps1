@@ -1,4 +1,13 @@
 function Test-MutatorContainerImage {
+    <#
+    .SYNOPSIS
+    Qualify a supported immutable tool image with source-bound proof.
+
+    .DESCRIPTION
+    Runs Ag or Journalctl with resource limits. Rejects failed transport, absent reports, identity
+    mismatch and source drift.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)][string]$Image,

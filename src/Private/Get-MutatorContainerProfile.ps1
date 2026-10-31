@@ -1,4 +1,13 @@
 function Get-MutatorContainerProfile {
+    <#
+    .SYNOPSIS
+    Build pinned Linux and Windows installation profiles for a tool.
+
+    .DESCRIPTION
+    Uses reviewed package plans, prerequisites and constraints. Rejects unknown profiles or missing pins
+    without claiming build qualification.
+    #>
+
     param([string]$Key,[string]$Binary)
     $directory=Join-Path $script:MutatorRoot 'resources/containers/definitions'
     $plans=Import-PowerShellDataFile (Join-Path $directory 'ToolPlans.psd1')

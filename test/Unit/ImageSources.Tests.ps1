@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the ImageSources tests.
+
+.DESCRIPTION
+Resolve the explicitly requested rootless image storage while respecting explicit rootful selection.
+Do not invent a sibling or silently change a selected connection.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll { Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking }
 Describe 'Explicit base transfer after switching the default connection to rootful' {
     It 'finds the explicitly requested rootless base with rootful selection <Explicit>' -ForEach @(@{Explicit=$true},@{Explicit=$false}) {

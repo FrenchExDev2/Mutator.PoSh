@@ -1,4 +1,13 @@
 function Remove-MutatorRun {
+    <#
+    .SYNOPSIS
+    Delete eligible runs from an explicit complete retention plan.
+
+    .DESCRIPTION
+    Rechecks containment, links, source protection and eligibility under confirmation. Supports WhatIf
+    and refuses truncated plans.
+    #>
+
     [CmdletBinding(SupportsShouldProcess,ConfirmImpact='Medium')]
     param([Parameter(Mandatory)][string]$RunRoot,[ValidateRange(0,10000)][int]$KeepLast=20,
         [datetimeoffset]$BeforeUtc=[datetimeoffset]::UtcNow.AddDays(-30))

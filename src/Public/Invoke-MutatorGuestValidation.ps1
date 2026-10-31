@@ -1,4 +1,13 @@
 function Invoke-MutatorGuestValidation {
+    <#
+    .SYNOPSIS
+    Submit the configured Ag job to an owned Windows guest.
+
+    .DESCRIPTION
+    Binds owner and fixture hash, validates returned gate evidence and retains a receipt. Does not
+    qualify unrelated profiles.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$Path,[ValidateRange(1,120)][int]$TimeoutMinutes=20)
     $stored=Read-MutatorGuestRun $Path;$run=$stored.Run

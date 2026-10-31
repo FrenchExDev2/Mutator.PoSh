@@ -1,4 +1,12 @@
 function Set-ImageToolEnvironment {
+    <#
+    .SYNOPSIS
+    Set tool paths and package homes for the image process.
+
+    .DESCRIPTION
+    Combines declared and platform paths without changing persistent host configuration.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Private image bootstrap updates only the current container process environment; no host or persistent configuration is changed.')]
     [CmdletBinding()]
     param([string]$Root)

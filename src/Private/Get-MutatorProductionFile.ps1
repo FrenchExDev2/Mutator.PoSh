@@ -1,4 +1,13 @@
 function Get-MutatorProductionFile {
+    <#
+    .SYNOPSIS
+    Enumerate the complete executable PowerShell production scope.
+
+    .DESCRIPTION
+    Validates the manifest entry point and includes root scripts plus src/resources PowerShell files.
+    Returns unique paths without test artifacts.
+    #>
+
     param([Parameter(Mandatory)][string]$ModulePath)
     $root=(Resolve-Path -LiteralPath $ModulePath -ErrorAction Stop).ProviderPath
     $name=Split-Path $root -Leaf

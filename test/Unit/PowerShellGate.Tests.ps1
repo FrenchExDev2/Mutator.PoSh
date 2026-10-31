@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the PowerShellGate tests.
+
+.DESCRIPTION
+Accept only complete nonempty consistent raw detection. Partial, excluded, surviving, unmapped or
+contradictory mutation evidence must fail even if the displayed score rounds to 100.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'A rounded one hundred is never a complete mutation gate' {
     It 'accepts complete, nonempty evidence with every non-equivalent mutant detected' {

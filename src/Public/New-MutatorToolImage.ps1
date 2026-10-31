@@ -1,4 +1,13 @@
 function New-MutatorToolImage {
+    <#
+    .SYNOPSIS
+    Build a tool recipe from an explicit local base.
+
+    .DESCRIPTION
+    Validates inputs and image identity and retains build/probe receipts. Image preparation does not
+    start or qualify a campaign.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$RecipePath, [string]$BaseImage,
         [Parameter(Mandatory)][string]$OutputDirectory, [string]$Connection,

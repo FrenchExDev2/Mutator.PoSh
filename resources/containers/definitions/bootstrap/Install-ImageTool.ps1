@@ -5,18 +5,45 @@ $ProgressPreference='SilentlyContinue'
 . (Join-Path $PSScriptRoot 'Environment.ps1')
 
 function New-ImageToolSymbolicLink {
+    <#
+    .SYNOPSIS
+    Create a platform file alias to an installed tool.
+
+    .DESCRIPTION
+    Preserves the target and surfaces privilege or unsupported-host failures during explicit image
+    bootstrap.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Private image bootstrap applies its reviewed recipe inside the outer image build ShouldProcess boundary.')]
     [CmdletBinding()]
     param([string]$Path,[string]$Target)
     [void][IO.File]::CreateSymbolicLink($Path,$Target)
 }
 function Set-ImageToolExecutable {
+    <#
+    .SYNOPSIS
+    Apply executable permissions to an installed Unix tool.
+
+    .DESCRIPTION
+    Adds execute permission for user, group and others through the Unix file-mode API. Unsupported
+    hosts surface the API error rather than silently claiming executable permissions.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Private image bootstrap changes only the extracted tool inside the outer image build ShouldProcess boundary.')]
     [CmdletBinding()]
     param([string]$Path)
     [IO.File]::SetUnixFileMode($Path,([IO.File]::GetUnixFileMode($Path) -bor [IO.UnixFileMode]::UserExecute -bor [IO.UnixFileMode]::GroupExecute -bor [IO.UnixFileMode]::OtherExecute))
 }
 function Invoke-ImageInstallCommand {
+    <#
+    .SYNOPSIS
+    Run one installer command and require an accepted exit.
+
+    .DESCRIPTION
+    Drains both process streams into a retained local log and accepts exit codes 0 and 3010.
+    Other exit codes throw before refreshing the image process environment.
+    #>
+
     param([string]$Name,[string[]]$Arguments)
     $application=Get-Command $Name -CommandType Application -ErrorAction Stop|Select-Object -First 1
     $start=[Diagnostics.ProcessStartInfo]::new($application.Source)
@@ -35,6 +62,15 @@ function Invoke-ImageInstallCommand {
     Set-ImageToolEnvironment $Root
 }
 function Install-ImageChocolatey {
+    <#
+    .SYNOPSIS
+    Install Chocolatey from verified bootstrap content.
+
+    .DESCRIPTION
+    Reuses an existing command, otherwise checks its bootstrap hash before execution and verifies
+    command discovery.
+    #>
+
     if(Get-Command choco.exe -CommandType Application -ErrorAction Ignore){return}
     $path=Join-Path $Root 'chocolatey-install.ps1'
     Invoke-WebRequest -Uri 'https://community.chocolatey.org/install.ps1' -OutFile $path
@@ -45,6 +81,15 @@ function Install-ImageChocolatey {
     $null=Get-Command choco.exe -CommandType Application -ErrorAction Stop
 }
 function Install-ImagePrerequisite {
+    <#
+    .SYNOPSIS
+    Install nonblank prerequisites with the selected package manager.
+
+    .DESCRIPTION
+    Preserves pins and chooses Linux distribution or macOS formula/cask mode. Empty lists launch no
+    installer.
+    #>
+
     param([string[]]$Packages)
     $Packages=@($Packages|Where-Object{![string]::IsNullOrWhiteSpace($_)})
     if(!$Packages.Count){return}
@@ -66,6 +111,15 @@ function Install-ImagePrerequisite {
     }
 }
 function Install-ImageArchive {
+    <#
+    .SYNOPSIS
+    Download/extract an artifact only after SHA-256 verification.
+
+    .DESCRIPTION
+    Requires HTTPS and an exact digest and handles supported formats. Corrupt downloads stay available
+    and are never executed.
+    #>
+
     param([string]$Uri,[string]$Sha256,[string]$Format,[string]$Binary)
     if($Uri -notmatch '^https://' -or $Sha256 -notmatch '^[a-fA-F0-9]{64}$'){throw 'A tool artifact requires an HTTPS TOOL_URL and its exact TOOL_SHA256.'}
     $archive=Join-Path $Root ('tool-download.'+$Format)

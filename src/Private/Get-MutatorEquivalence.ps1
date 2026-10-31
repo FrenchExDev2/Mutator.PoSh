@@ -1,4 +1,13 @@
 function Get-MutatorEquivalence {
+    <#
+    .SYNOPSIS
+    Validate legacy equivalence declarations against current mutation candidates.
+
+    .DESCRIPTION
+    Requires exact source hashes, in-scope tests and one matching pinned-tool candidate. Returns
+    diagnostics; strict callers still reject exclusions.
+    #>
+
     param([string]$Root,[string[]]$Paths)
     $map=[ordered]@{}
     $declaration=Join-Path $Root 'test/mutation-equivalents.json'
@@ -29,6 +38,15 @@ function Get-MutatorEquivalence {
 }
 
 function Confirm-MutatorEquivalence {
+    <#
+    .SYNOPSIS
+    Reject equivalence exclusions from a strict mutation campaign.
+
+    .DESCRIPTION
+    Checks declarations and configured exclusions. Any nonempty set throws rather than improving the raw
+    score.
+    #>
+
     param([string]$ModulePath,[Collections.IDictionary]$Configuration)
     $current=Get-MutatorEquivalence -Root $ModulePath -Paths $Configuration.mutate
     $configured=if($Configuration.Contains('equivalents')){$Configuration.equivalents}else{[ordered]@{}}

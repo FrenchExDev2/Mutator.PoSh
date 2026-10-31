@@ -1,4 +1,13 @@
 function Invoke-MutatorGitImageValidation {
+    <#
+    .SYNOPSIS
+    Validate Git with frozen dependencies and CliEnvironment images.
+
+    .DESCRIPTION
+    Defaults to Linux and supports a detached controller. Retains failed/interrupted workloads without
+    promoting them to a full score.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$ModuleRoot,[ValidateSet('Linux','Windows')][string[]]$OS=@('Linux'),
         [ValidateSet('Podman','Docker')][string]$Engine='Podman',[string]$Connection,[string]$OutputDirectory,[ValidateSet('Alpine','Debian')][string]$Distribution='Alpine',

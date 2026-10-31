@@ -1,4 +1,13 @@
 function New-MutatorContainerWorkspace {
+    <#
+    .SYNOPSIS
+    Create a controlled module workspace for container-definition tests.
+
+    .DESCRIPTION
+    Builds minimal contributor manifests from fixture profiles and generates definitions without
+    qualifying a real image.
+    #>
+
     param([Parameter(Mandatory)][string]$Path)
     $mutator=Split-Path (Split-Path $PSCommandPath)
     $mutator=Split-Path $mutator

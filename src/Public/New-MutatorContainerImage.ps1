@@ -1,4 +1,13 @@
 function New-MutatorContainerImage {
+    <#
+    .SYNOPSIS
+    Build or reuse a pinned image with explicit resource proof.
+
+    .DESCRIPTION
+    Validates identity, dependencies and base overrides. Honors WhatIf before allocation and retains
+    failures without retries.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param(
         [Parameter(Mandatory)][string]$ModulePath,

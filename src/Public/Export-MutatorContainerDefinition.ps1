@@ -1,4 +1,12 @@
 function Export-MutatorContainerDefinition {
+    <#
+    .SYNOPSIS
+    Generate module recipes from tool/dependency metadata.
+
+    .DESCRIPTION
+    Requires Force to replace definitions. Git remains owned by CliEnvironment even with Force.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string[]]$ModulePath,[switch]$Force,[ValidateSet('Dockurr','Native')][string]$WindowsBackend='Dockurr',[switch]$IncludeMacOS)
     $templates=Join-Path $script:MutatorRoot 'resources/containers/definitions'

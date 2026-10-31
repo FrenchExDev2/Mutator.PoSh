@@ -1,4 +1,13 @@
 function Get-MutatorFailure {
+    <#
+    .SYNOPSIS
+    Return bounded masked errors and PowerShell/C# survivors.
+
+    .DESCRIPTION
+    Includes actionable locations and pagination metadata. Item/byte limits bound delivery while logs
+    remain local.
+    #>
+
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$Path,[ValidateRange(1,100)][int]$MaxItems=20,[ValidateRange(1024,1048576)][int]$MaxOutputBytes=8192,[ValidateRange(0,2147483647)][int]$Skip=0)
     $run=Get-MutatorRun -Path $Path

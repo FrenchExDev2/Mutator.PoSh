@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the ContainerBase tests.
+
+.DESCRIPTION
+Generated bases must contain verified pinned runtime inputs and stable canonical identities.
+Bootstrap/SDK changes invalidate the correct identities, while live or failed guest disks cannot be
+exported as valid seeds.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
     . (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'test/Fixtures/ContainerWorkspace.ps1')

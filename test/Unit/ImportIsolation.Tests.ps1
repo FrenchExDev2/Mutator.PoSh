@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the ImportIsolation tests.
+
+.DESCRIPTION
+Restore nested mutable module state within the same mutant epoch and remove test-added values. A new
+epoch, replaced function/module or opaque state must trigger a fresh import.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:Root=Split-Path (Split-Path $PSScriptRoot)
     Import-Module (Join-Path $script:Root 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking

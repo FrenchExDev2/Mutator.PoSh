@@ -1,4 +1,13 @@
 function Update-MutatorContainerDefinition {
+    <#
+    .SYNOPSIS
+    Regenerate shared/selected recipes with a change report.
+
+    .DESCRIPTION
+    Restricts selection to active siblings and preserves existing macOS definitions. Does not build or
+    qualify images.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([string]$ModuleRoot=(Split-Path $script:MutatorRoot),[string[]]$ModulePath,
         [ValidateSet('Dockurr','Native')][string]$WindowsBackend='Dockurr',[switch]$IncludeMacOS,

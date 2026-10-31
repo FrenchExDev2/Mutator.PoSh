@@ -1,4 +1,13 @@
 function Invoke-MutatorValidationChild {
+    <#
+    .SYNOPSIS
+    Run a child with retained logs and its last JSON summary.
+
+    .DESCRIPTION
+    Forwards cancellation and separates native outcome from semantic summary. A successful process alone
+    does not establish test success.
+    #>
+
     param([string[]]$Arguments,[string]$Directory,[string]$Proof,[int]$TimeoutSeconds=3600,[string]$StopPath)
     [void][IO.Directory]::CreateDirectory($Proof)
     $native=Invoke-MutatorNative (Join-Path $PSHOME $(if($IsWindows){'pwsh.exe'}else{'pwsh'})) $Arguments $Directory $TimeoutSeconds -StopPath $StopPath
@@ -11,6 +20,15 @@ function Invoke-MutatorValidationChild {
 }
 
 function Copy-MutatorValidationMutationProof {
+    <#
+    .SYNOPSIS
+    Mirror run/package evidence without mutation sandboxes.
+
+    .DESCRIPTION
+    Preserves relative paths and publishes completed files atomically. Source readers permit concurrent
+    replacement.
+    #>
+
     param([string]$RunPath,[string]$Destination)
     $folders=@($RunPath)
     $packages=Join-Path $RunPath 'packages'
@@ -37,6 +55,15 @@ function Copy-MutatorValidationMutationProof {
 }
 
 function Invoke-MutatorValidationWorkload {
+    <#
+    .SYNOPSIS
+    Run semantic suites, coverage and mutations against frozen inputs.
+
+    .DESCRIPTION
+    Checks OS/source identity, retains evidence and blocks mutation after failed prerequisites. Honors
+    stopping; partial selections never become a full gate.
+    #>
+
     param([string]$Root,[string]$ReportRoot)
     $request=Read-MutatorJson (Join-Path $Root 'request.json')
     $actual=Get-MutatorHostPlatform

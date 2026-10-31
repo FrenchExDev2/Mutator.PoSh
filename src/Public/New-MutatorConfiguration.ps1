@@ -1,4 +1,13 @@
 function New-MutatorConfiguration {
+    <#
+    .SYNOPSIS
+    Generate complete production-source and test associations.
+
+    .DESCRIPTION
+    Includes resources/dependencies, disables covered-lines-only filtering and rejects equivalence
+    exclusions. Replacing configuration requires Force.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$ModulePath,[string[]]$Dependency=@(),[switch]$Force)
     $root=(Resolve-Path -LiteralPath $ModulePath -ErrorAction Stop).ProviderPath

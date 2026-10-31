@@ -1,4 +1,13 @@
 function Get-MutatorEngine {
+    <#
+    .SYNOPSIS
+    Read settings or select the enabled configured default.
+
+    .DESCRIPTION
+    Rejects conflicting/disabled defaults, otherwise prefers Podman then Docker. Does not start
+    services.
+    #>
+
     [CmdletBinding()]
     param([ValidateSet('Docker','Podman')][string[]]$Name=@('Docker','Podman'),[string]$Path=(Get-MutatorEngineConfigurationPath),[switch]$Default)
     $document=if(Test-Path -LiteralPath $Path){Read-MutatorEngineConfiguration $Path}else{@{}}

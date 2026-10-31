@@ -1,3 +1,17 @@
+<#
+.SYNOPSIS
+Expected behavior for the GuestControl tests.
+
+.DESCRIPTION
+Serve fresh health/stop state only for canonical paths and the matching job owner. Foreign,
+malformed or unreadable requests return explicit rejection/error statuses.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking}
 Describe 'Guest cancellation endpoint' {
     It 'serves fresh stop state only for the owned job and refuses arbitrary paths' {

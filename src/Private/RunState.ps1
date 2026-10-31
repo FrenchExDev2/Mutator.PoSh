@@ -1,19 +1,54 @@
 function Get-MutatorRunRoot {
+    <#
+    .SYNOPSIS
+    Resolve the run storage root without creating it.
+
+    .DESCRIPTION
+    Defaults to test/Artifacts/mutator under this module and returns an absolute provider path.
+    #>
+
     param([string]$Path)
     if (!$Path) { $Path = Join-Path $script:MutatorRoot 'test/Artifacts/mutator' }
     $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Path)
 }
 function Move-MutatorAtomicFile {
+    <#
+    .SYNOPSIS
+    Replace the destination with one completed temporary file.
+
+    .DESCRIPTION
+    Provides the single move boundary for atomic publication. Does not serialize data or retry business
+    operations.
+    #>
+
     param([string]$Source,[string]$Destination)
     [IO.File]::Move($Source,$Destination,$true)
 }
 
 function Open-MutatorJsonFile {
+    <#
+    .SYNOPSIS
+    Open retained JSON while allowing concurrent replacement.
+
+    .DESCRIPTION
+    Shares read, write and delete access so publishers can atomically replace the file while readers
+    hold the previous version.
+    #>
+
     param([string]$Path)
     [IO.FileStream]::new($Path,[IO.FileMode]::Open,[IO.FileAccess]::Read,([IO.FileShare]::ReadWrite -bor [IO.FileShare]::Delete))
 }
 
 function Complete-MutatorAtomicWrite {
+    <#
+    .SYNOPSIS
+    Publish the same completed file within a bounded conflict budget.
+
+    .DESCRIPTION
+    Retries recognized transient conflicts at most 40 times. Other errors propagate immediately; tests
+    and campaigns are never replayed.
+    #>
+
     # Only retry the same completed local replacement, never a business command.
     param([string]$Source,[string]$Destination)
     for($attempt=0;$attempt -lt 40;$attempt++){
@@ -28,6 +63,15 @@ function Complete-MutatorAtomicWrite {
 }
 
 function Write-MutatorJson {
+    <#
+    .SYNOPSIS
+    Write complete UTF-8 JSON through atomic publication.
+
+    .DESCRIPTION
+    Serializes once, creates the parent and delegates bounded replacement. Preserves prior state on
+    failure and cleans up temporary files.
+    #>
+
     param([string]$Path, [object]$Data)
     [void][IO.Directory]::CreateDirectory((Split-Path $Path))
     $temporary = $Path + '.' + [guid]::NewGuid().ToString('N') + '.tmp'
@@ -39,6 +83,15 @@ function Write-MutatorJson {
     } finally { if (Test-Path -LiteralPath $temporary) { Remove-Item -LiteralPath $temporary -Force } }
 }
 function Read-MutatorJson {
+    <#
+    .SYNOPSIS
+    Read retained JSON with bounded transient-lock handling.
+
+    .DESCRIPTION
+    Absent files yield no value; date strings remain strings. Disposes readers and propagates invalid
+    JSON or nontransient errors.
+    #>
+
     param([string]$Path)
     if (!(Test-Path -LiteralPath $Path)) { return }
     $stream=$null
@@ -60,6 +113,15 @@ function Read-MutatorJson {
     finally {$reader.Dispose()}
 }
 function Read-MutatorProgressTail {
+    <#
+    .SYNOPSIS
+    Read the last two retained progress lines.
+
+    .DESCRIPTION
+    Uses a bounded queue and replacement-friendly sharing. Missing files yield no lines and opened
+    streams are disposed.
+    #>
+
     param([string]$Path)
     $stream=$null;$reader=$null
     try{
@@ -76,6 +138,15 @@ function Read-MutatorProgressTail {
     }
 }
 function Copy-MutatorTree {
+    <#
+    .SYNOPSIS
+    Stage sources without generated state or links.
+
+    .DESCRIPTION
+    Skips .git, .cache and Artifacts, copies regular files and preserves layout. Refuses links before
+    following external content.
+    #>
+
     param([string]$Source, [string]$Destination)
     [void][IO.Directory]::CreateDirectory($Destination)
     foreach ($item in Get-ChildItem -LiteralPath $Source -Force) {
@@ -87,6 +158,15 @@ function Copy-MutatorTree {
     }
 }
 function Start-MutatorWorker {
+    <#
+    .SYNOPSIS
+    Launch a package or supervisor with logs and process identity.
+
+    .DESCRIPTION
+    Quotes literal arguments, hides Windows workers and detaches Windows supervisors. Returns PID,
+    creation time and role.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Private worker bootstrap is covered by the public run ShouldProcess boundary.')]
     [CmdletBinding()]
     param([string]$RunDirectory, [string]$Package = '')
@@ -101,12 +181,29 @@ function Start-MutatorWorker {
     @{ Id = $process.Id; StartedUtc = $process.StartTime.ToUniversalTime().ToString('O'); Role = $name }
 }
 function Test-MutatorProcess {
+    <#
+    .SYNOPSIS
+    Check a retained PID still identifies the recorded live process.
+
+    .DESCRIPTION
+    Requires PID and creation time. Missing, exited or recycled processes do not count as alive.
+    #>
+
     param([Collections.IDictionary]$Identity)
     if (!$Identity -or !$Identity['Id'] -or !$Identity['StartedUtc']) { return $false }
     $process = Get-Process -Id $Identity.Id -ErrorAction Ignore
     $process -and !$process.HasExited -and [math]::Abs(($process.StartTime.ToUniversalTime() - [datetime]::Parse($Identity.StartedUtc).ToUniversalTime()).TotalSeconds) -lt 1
 }
 function Invoke-MutatorNative {
+    <#
+    .SYNOPSIS
+    Execute through QuietCli with locally bounded stream retention.
+
+    .DESCRIPTION
+    Forwards cancellation/timeout, records consistent advisory progress and separates native outcome
+    from masked failure details. Always disposes captures.
+    #>
+
     param([string]$Command, [string[]]$Arguments, [string]$Directory, [int]$TimeoutSeconds = 3600,[string]$ProgressPath,[string]$StopPath,[string]$Encoding = 'utf-8')
     $state = @{ Out = [Text.StringBuilder]::new(); Err = [Text.StringBuilder]::new();ProgressPath=$ProgressPath;OutTruncated=$false;ErrTruncated=$false }
     Invoke-MutatorQuietOperation {

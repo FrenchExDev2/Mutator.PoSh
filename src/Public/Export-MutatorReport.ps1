@@ -1,4 +1,13 @@
 function Export-MutatorReport {
+    <#
+    .SYNOPSIS
+    Copy source-bound package evidence to module artifacts.
+
+    .DESCRIPTION
+    Retains reports, summaries and source comparisons. Refuses read-only imports, unsafe run IDs and
+    escaping destinations.
+    #>
+
     [CmdletBinding()]
     param([Parameter(Mandatory)][string]$Path,[Parameter(Mandatory)][ValidatePattern('^[A-Za-z0-9][A-Za-z0-9._-]*$')][string]$RunId)
     $run=Get-MutatorRun -Path $Path

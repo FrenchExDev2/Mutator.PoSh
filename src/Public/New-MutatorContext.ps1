@@ -1,4 +1,13 @@
 function New-MutatorContext {
+    <#
+    .SYNOPSIS
+    Capture source, dependency, configuration, runtime and tool identity.
+
+    .DESCRIPTION
+    Requires loaded Pester and includes an optional immutable image ID. Cache path alone does not define
+    executable identity.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Pure context factory: reads fingerprints and returns data without changing system state.')]
     [CmdletBinding()]
     param([string]$SourceRoot, [string[]]$Subtrees, [string]$ConfigurationPath, [object]$Tool, [string]$ContainerImageId)

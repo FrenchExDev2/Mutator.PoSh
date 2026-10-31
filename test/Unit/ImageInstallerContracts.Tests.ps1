@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the ImageInstallerContracts tests.
+
+.DESCRIPTION
+Installers must preserve pins, verify hashes before extraction/execution and use the selected
+platform manager. Empty inputs do no work; native/reboot/failure exits, executable permissions and
+alias failures stay explicit.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:Installer=Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'resources/containers/definitions/bootstrap/Install-ImageTool.ps1'
 }

@@ -1,4 +1,13 @@
 function Get-MutatorOwnedMemoryRun {
+    <#
+    .SYNOPSIS
+    Verify a recovery candidate belongs to a registered run.
+
+    .DESCRIPTION
+    Requires a known script, absolute run path and live PID/creation-time receipt. Ordinary shells and
+    command-string lookalikes are excluded.
+    #>
+
     param([Collections.IDictionary]$Target,[string]$CommandLine)
     if(!$CommandLine){$CommandLine=$Target['CommandLine']}
     if(!$CommandLine -or $CommandLine -match '(?i)(?:^|\s)"?-(?:command|encodedcommand|c|ec|e)"?(?:\s|$)'){return}
@@ -23,6 +32,15 @@ function Get-MutatorOwnedMemoryRun {
 }
 
 function Get-MutatorRestartOptions {
+    <#
+    .SYNOPSIS
+    Reconstruct a package restart while preserving run policy.
+
+    .DESCRIPTION
+    Carries budgets, target OS, tools, container settings and timeouts forward. Refuses a changed
+    recheck baseline.
+    #>
+
     param([Collections.IDictionary]$Run,[Collections.IDictionary]$Entry,[string]$RunRoot)
     $options=@{ModulePath=$Entry.ModulePath;SourceRoot=$Run.SourceRoot;RunRoot=$RunRoot;Workers=$Run.Schedule.Workers
         WorkerBudget=$Run.Schedule.WorkerBudget;ThrottleLimit=1;MemoryBudgetMiB=$Run.Schedule.MemoryBudgetMiB

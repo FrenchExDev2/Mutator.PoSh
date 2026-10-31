@@ -1,9 +1,51 @@
+<#
+.SYNOPSIS
+Expected behavior for the GuestJobExecution tests.
+
+.DESCRIPTION
+Bind each job to its owner, fixture/descriptor hashes and valid deadline; preserve argv, both
+streams and actual exit. Do not replay completed jobs; cancellation/timeout and report mirroring
+retain distinct proof.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:GuestJobsRunner=Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'resources/containers/jobs/Invoke-GuestJobs.ps1'
     $script:GuestProcessRunner=Join-Path (Split-Path $script:GuestJobsRunner) 'Invoke-GuestJobProcess.ps1'
-    function Save-GuestJobJson {param([string]$Path,[object]$Value);$Value|ConvertTo-Json -Depth 8|Set-Content -LiteralPath $Path}
-    function Invoke-GuestJobFixture {& $script:GuestJobsRunner @script:JobOptions}
-    function Read-GuestJobResult {Get-Content (Join-Path $script:JobDirectory 'result.json') -Raw|ConvertFrom-Json -AsHashtable -DateKind String}
+    function Save-GuestJobJson {
+        <#
+        .SYNOPSIS
+        Write a guest-job fixture document at the requested test path.
+
+        .DESCRIPTION
+        Serializes controlled input/results for the job runner. The fixture caller owns the destination
+        directory.
+        #>
+        param([string]$Path,[object]$Value);$Value|ConvertTo-Json -Depth 8|Set-Content -LiteralPath $Path}
+    function Invoke-GuestJobFixture {
+        <#
+        .SYNOPSIS
+        Invoke the guest job runner with the current controlled test options.
+
+        .DESCRIPTION
+        Exercises job transport and lifecycle behavior using fixture payloads rather than a production
+        mutation campaign.
+        #>
+        & $script:GuestJobsRunner @script:JobOptions}
+    function Read-GuestJobResult {
+        <#
+        .SYNOPSIS
+        Read the retained result of the current fixture job.
+
+        .DESCRIPTION
+        Preserves date strings while returning a mapping for exact outcome, ownership and cancellation
+        assertions.
+        #>
+        Get-Content (Join-Path $script:JobDirectory 'result.json') -Raw|ConvertFrom-Json -AsHashtable -DateKind String}
 }
 Describe 'Guest job execution and retained reports' {
     BeforeEach {

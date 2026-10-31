@@ -1,4 +1,13 @@
 function Set-MutatorEngine {
+    <#
+    .SYNOPSIS
+    Update endpoints, enablement and the unique default.
+
+    .DESCRIPTION
+    Preserves unspecified settings and clears empty endpoints. Writes dedicated YAML atomically; WhatIf
+    writes nothing.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([AllowNull()][string]$Docker,[bool]$DockerEnabled,[AllowNull()][string]$Podman,[bool]$PodmanEnabled,
         [ValidateSet('Docker','Podman')][string]$DefaultEngine,[string]$Path=(Get-MutatorEngineConfigurationPath))

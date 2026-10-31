@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the ResourceEntryContracts tests.
+
+.DESCRIPTION
+Entrypoints must dispatch the intended worker/workload using current runtime paths and return actual
+outcomes. Stubbed workers/installers must retain diagnostics without launching real supervisors or
+watchdog recovery.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:ResourceModuleRoot=Split-Path (Split-Path $PSScriptRoot)
     Import-Module (Join-Path $script:ResourceModuleRoot 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking

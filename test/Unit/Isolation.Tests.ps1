@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the Isolation tests.
+
+.DESCRIPTION
+Campaign target determines mandatory Windows Sandbox or Podman isolation without host fallback.
+Reports must identify required versus actually started runtimes and retain evidence while stopping
+only the owned session.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
 }

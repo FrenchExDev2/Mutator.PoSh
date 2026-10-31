@@ -7,6 +7,8 @@ source_dir=/Volumes/shared/mutator
 metadata="$source_dir/runtime.json"
 temporary=$(mktemp -d)
 trap 'rm -f "$temporary/powershell.pkg" "$temporary/dotnet.pkg" "$temporary/homebrew.sh"; rmdir "$temporary"' EXIT
+# Read one pinned runtime value from the shared metadata. Missing keys fail under
+# the script's strict error policy before a package can be accepted for install.
 get_value() { /usr/bin/plutil -extract "$1" raw -o - "$metadata"; }
 curl -fsSL "$(get_value PowerShell.Uri)" -o "$temporary/powershell.pkg"
 printf '%s  %s\n' "$(get_value PowerShell.Sha256)" "$temporary/powershell.pkg" | shasum -a 256 -c -

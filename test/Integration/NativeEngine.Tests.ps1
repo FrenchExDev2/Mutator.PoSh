@@ -1,3 +1,18 @@
+<#
+.SYNOPSIS
+Expected behavior for the NativeEngine tests.
+
+.DESCRIPTION
+Native execution preserves literal argv and both streams, distinguishes
+failure/timeout/cancellation, marks truncation and rejects invalid decoding. Secrets must be masked,
+captures released and caller configuration restored.
+
+.NOTES
+Run this suite explicitly with its documented runtime prerequisites. Its result covers the asserted
+fixture scenarios and selected environment only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     $script:EngineModule=Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1'
     Import-Module $script:EngineModule -Force -DisableNameChecking

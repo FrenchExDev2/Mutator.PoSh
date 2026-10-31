@@ -1,4 +1,12 @@
 function Test-MutatorValidationStop {
+    <#
+    .SYNOPSIS
+    Check for the validation's own stop request.
+
+    .DESCRIPTION
+    Requires the document RunId to match. Foreign signals do not cancel another run.
+    #>
+
     param([string]$ReportRoot,[string]$RunId)
     $path=Join-Path $ReportRoot 'stop.json'
     if(![IO.File]::Exists($path)){return $false}
@@ -7,6 +15,15 @@ function Test-MutatorValidationStop {
 }
 
 function Stop-MutatorValidationMutation {
+    <#
+    .SYNOPSIS
+    Stop a mutation child before exporting retained proof.
+
+    .DESCRIPTION
+    Waits for terminal state and owned workers to exit. Returns separate stop/copy/partial indicators
+    without a final mutation score.
+    #>
+
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions','',Justification='Private cooperative stop is covered by the validation run public ShouldProcess boundary.')]
     [CmdletBinding()]
     param([string]$RunPath,[string]$Destination,[string]$ValidationRunId,[ValidateRange(0,3600)][int]$TimeoutSeconds=60)
@@ -33,6 +50,14 @@ function Stop-MutatorValidationMutation {
     return $proof
 }
 function Assert-MutatorValidationActive {
+    <#
+    .SYNOPSIS
+    Throw cancellation for an owned validation stop signal.
+
+    .DESCRIPTION
+    Checks the retained request at a cooperative boundary before more work starts.
+    #>
+
     param([string]$ReportRoot,[string]$RunId)
     if(Test-MutatorValidationStop $ReportRoot $RunId){throw [OperationCanceledException]::new('The validation was stopped by its owner.')}
 }

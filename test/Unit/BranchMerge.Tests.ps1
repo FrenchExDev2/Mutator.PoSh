@@ -1,6 +1,29 @@
+<#
+.SYNOPSIS
+Expected behavior for the BranchMerge tests.
+
+.DESCRIPTION
+Merge only identical branch definitions and source identities with successful semantic tests. Union
+complementary observed outcomes, including singleton switch hits, and reject inconsistent evidence.
+
+.NOTES
+Unit-level contract evidence. Filesystem and child-process fixtures may run locally; mocked
+platform/tool boundaries remain simulations. A pass covers the asserted scenarios only.
+Each It case states its scenario-specific expectation. Every expanded -ForEach case must pass.
+#>
+
 BeforeAll {
     Import-Module (Join-Path (Split-Path (Split-Path $PSScriptRoot)) 'FrenchExDev.Mutator.PoSh.psd1') -Force -DisableNameChecking
     function New-BranchReport($Hits) {
+        <#
+        .SYNOPSIS
+        Build controlled branch definitions and selected observed outcomes.
+
+        .DESCRIPTION
+        Supplies internally consistent proof for merge tests, which then vary identity, counters and
+        semantic-test validity independently.
+        #>
+
         $definitions=@(@{Id=('a'*64);File='Value.ps1';Kind='If';Line=1;Column=1;Outcomes=@('true','false')})
         @{Metric='BranchOutcomes';Platform='Windows';Branches=$definitions;SourceFingerprints=@(@{Path='Value.ps1';Sha256=('b'*64)})
             Total=2;Covered=$Hits.Count;Observed=@($Hits|ForEach-Object {('a'*64)+'|'+$_});Missed=@(@('true','false')|Where-Object {$_ -notin $Hits})

@@ -1,4 +1,13 @@
 function Invoke-MutatorRecheck {
+    <#
+    .SYNOPSIS
+    Schedule an isolated one-worker survivor recheck.
+
+    .DESCRIPTION
+    Selects Windows Sandbox or Podman and freezes baseline identity. Returns diagnostic counters with
+    Score null and FullGateSatisfied false.
+    #>
+
     [CmdletBinding(SupportsShouldProcess)]
     param([Parameter(Mandatory)][string]$ModulePath,[Parameter(Mandatory)][string]$ReportPath,
         [string]$OutputDirectory,[string]$SourceRoot,[ValidateSet('Windows','Linux')][string]$OS,
